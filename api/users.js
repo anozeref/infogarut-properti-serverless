@@ -7,9 +7,25 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
-      const { data, error } = await supabase.from('users').select('*');
-      if (error) throw error;
-      res.status(200).json(data);
+      const { username, password } = req.query;
+      if (username && password) {
+        // Login logic
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('username', username)
+          .eq('password', password)
+          .single();
+        if (error || !data) {
+          return res.status(401).json({ error: 'Invalid credentials' });
+        }
+        res.status(200).json(data);
+      } else {
+        // Fetch all users (existing logic)
+        const { data, error } = await supabase.from('users').select('*');
+        if (error) throw error;
+        res.status(200).json(data);
+      }
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
