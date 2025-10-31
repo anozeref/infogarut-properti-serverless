@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@supabase/supabase-js": "^2.78.0",
+    "@vercel/blob": "^2.0.0"
+  }
+}

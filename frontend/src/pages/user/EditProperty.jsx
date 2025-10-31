@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaArrowLeft, FaTimes } from "react-icons/fa"; // Pastikan FaTimes diimpor
+import { FaArrowLeft, FaTimes } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import styles from "./EditProperty.module.css";
+import { API_URL } from "../../utils/constant";
 
 export default function EditProperty({ darkMode }) {
   const { id } = useParams();
@@ -30,22 +31,27 @@ export default function EditProperty({ darkMode }) {
   const [previewModal, setPreviewModal] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Ambil data properti dari backend
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3004/properties/${id}`)
-      .then((res) => {
-        setFormData({
-          ...res.data,
-          media: res.data.media || [],
-        });
-      })
-      .catch(() => {
-        Swal.fire("Error", "Data properti tidak ditemukan.", "error");
-        navigate("/user/propertisaya");
-      })
-      .finally(() => setLoading(false));
-  }, [id, navigate]);
+  // 🔹 Ambil data properti dari Supabase via API route
+   useEffect(() => {
+     axios
+       .get(`${API_URL}properties?id=${id}`)
+       .then((res) => {
+         const property = res.data[0]; // API mengembalikan array
+         if (property) {
+           setFormData({
+             ...property,
+             media: property.media || [],
+           });
+         } else {
+           throw new Error("Property not found");
+         }
+       })
+       .catch(() => {
+         Swal.fire("Error", "Data properti tidak ditemukan.", "error");
+         navigate("/user/propertisaya");
+       })
+       .finally(() => setLoading(false));
+   }, [id, navigate, API_URL]);
 
   // 🔹 Handle input teks
   const handleChange = (e) => {
@@ -106,17 +112,37 @@ export default function EditProperty({ darkMode }) {
     fileInputRef.current.click();
   };
 
-  // 🔹 Submit (PUT ke db.json)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  // 🔹 Validasi form
+  const validateForm = () => {
     if (!formData.namaProperti || !formData.harga || !formData.lokasi) {
       Swal.fire("Gagal", "Harap isi Nama Properti, Harga, dan Lokasi.", "warning");
-      return;
+      return false;
     }
 
+    // Validasi kecamatan dan desa wajib diisi
+    if (!formData.kecamatan.trim()) {
+      Swal.fire("Error", "Kecamatan wajib diisi!", "error");
+      return false;
+    }
+    if (!formData.desa.trim()) {
+      Swal.fire("Error", "Desa wajib diisi!", "error");
+      return false;
+    }
+
+    return true;
+  };
+
+  // 🔹 Submit (PUT ke db.json)
+   const handleSubmit = async (e) => {
+     e.preventDefault();
+
+     // Jalankan validasi
+     if (!validateForm()) {
+       return;
+     }
+
     try {
-      await axios.put(`http://localhost:3004/properties/${id}`, formData);
+      await axios.patch(`${API_URL}properties?id=${id}`, formData);
       Swal.fire({
         title: "Berhasil!",
         text: "Properti berhasil diperbarui.",
@@ -198,24 +224,26 @@ export default function EditProperty({ darkMode }) {
             </div>
 
             <div>
-              <label>Kecamatan</label>
-              <input
-                name="kecamatan"
-                value={formData.kecamatan}
-                onChange={handleChange}
-                className={inputClass}
-              />
-            </div>
+               <label>Kecamatan *</label>
+               <input
+                 name="kecamatan"
+                 value={formData.kecamatan}
+                 onChange={handleChange}
+                 className={inputClass}
+                 required
+               />
+             </div>
 
-            <div>
-              <label>Desa</label>
-              <input
-                name="desa"
-                value={formData.desa}
-                onChange={handleChange}
-                className={inputClass}
-              />
-            </div>
+             <div>
+               <label>Desa *</label>
+               <input
+                 name="desa"
+                 value={formData.desa}
+                 onChange={handleChange}
+                 className={inputClass}
+                 required
+               />
+             </div>
 
             <div>
               <label>Tipe Properti</label>
@@ -327,13 +355,14 @@ export default function EditProperty({ darkMode }) {
                   const isObject = typeof file === "object";
                   let fileUrl = isObject ? file.url : file;
 
-                  // 3. 💡 Logika URL diperbaiki (jangan prepend 'blob:' url)
+                  // 3. 💡 URL handling untuk Vercel Blob
                   if (
                     fileUrl &&
                     !fileUrl.startsWith("http") &&
                     !fileUrl.startsWith("blob")
                   ) {
-                    fileUrl = `http://localhost:3005/media/${fileUrl}`;
+                    // File sudah menggunakan full URL dari Vercel Blob
+                    fileUrl = fileUrl;
                   }
 
                   const fileType =

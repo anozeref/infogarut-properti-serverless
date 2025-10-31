@@ -8,6 +8,7 @@ import styles from './Properti.module.css';
 import PropertyCard from '../../components/PropertyCard/PropertyCard.jsx';
 // Mengimpor hook useSearchParams dari react-router-dom untuk membaca parameter URL
 import { useSearchParams } from 'react-router-dom';
+import { API_URL } from '../../utils/constant';
 
 /**
  * Fungsi Bantuan (`Helper Function`): `parsePostedAt`
@@ -102,8 +103,8 @@ const Properti = () => {
     // karena dependency array-nya kosong (`[]`).
     useEffect(() => {
         setLoading(true); // Mulai status loading
-        // Mengambil data dari endpoint `/properties` di json-server
-        fetch('http://localhost:3004/properties')
+        // Mengambil data dari endpoint `/properties` di serverless API
+        fetch(`${API_URL}properties`)
             .then(res => res.json()) // Mengubah response menjadi format JSON
             .then(data => {
                 // Setelah data diterima, urutkan berdasarkan tanggal posting

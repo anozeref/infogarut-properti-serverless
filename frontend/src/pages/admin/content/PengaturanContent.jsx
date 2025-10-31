@@ -4,16 +4,13 @@ import { motion } from 'framer-motion';
 import { FiKey, FiTrash2, FiUsers } from 'react-icons/fi';
 import styles from './PengaturanContent.module.css';
 import axios from 'axios';
-import { createSocketConnection, emitAdminAction } from '../../../utils/socketUtils';
+import { API_URL } from '../../../utils/constant';
 
 // Axios instance ke backend
 const api = axios.create({
-  baseURL: 'http://localhost:3005',
+  baseURL: API_URL,
   headers: { 'X-Admin-Request': 'true' }
 });
-
-// Socket instance untuk real-time updates
-const socket = createSocketConnection("http://localhost:3005");
 
 // Animasi card variants
 const cardVariants = {
@@ -29,10 +26,10 @@ export default function PengaturanContent() {
   // Ambil data banned users
   useEffect(() => {
     const fetchBannedUsers = async () => {
-      console.log("PengaturanContent: Fetching banned users from localhost:3005/api/banned-users");
+      console.log("PengaturanContent: Fetching banned users from serverless API");
       setIsLoadingBanned(true);
       try {
-        const res = await api.get('/api/banned-users');
+        const res = await api.get('banned-users');
         console.log("PengaturanContent: Fetched banned users count:", res.data.length);
         setBannedUsers(res.data);
       } catch (err) {
@@ -186,15 +183,15 @@ export default function PengaturanContent() {
 
             try {
               // ID admin selalu 5
-              const res = await axios.get("http://localhost:3004/users/5"); 
-              const adminData = res.data;
+               const res = await axios.get(`${API_URL}users?id=5`);
+               const adminData = res.data;
 
               if (adminData.password !== passwordLama) {
                 return Swal.fire("Password Lama Salah!", "Password lama yang Anda masukkan tidak cocok.", "error");
               }
 
               // Update password
-              await axios.patch("http://localhost:3004/users/5", { password: passwordBaru });
+              await axios.patch(`${API_URL}users?id=5`, { password: passwordBaru });
               Swal.fire("Password Berhasil Diubah!", "Password admin telah berhasil diperbarui. Silakan login ulang untuk mengonfirmasi.", "success");
               e.target.reset();
             } catch (err) {

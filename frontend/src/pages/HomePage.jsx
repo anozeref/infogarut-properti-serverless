@@ -8,6 +8,7 @@ import HighlightProperti from '../components/HighlightProperti/HighlightProperti
 import Categories from '../components/Categories/Categories';
 import WhyChooseUs from '../components/WhyChooseUs/WhyChooseUs';
 import Faq from '../components/Faq/Faq';
+import { API_URL } from '../utils/constant';
 
 /**
  * Fungsi Bantuan (`Helper Function`): `parseCustomDate`
@@ -76,8 +77,8 @@ const HomePage = () => {
     // Berjalan hanya *satu kali* setelah komponen pertama kali di-render (`[]`).
     useEffect(() => {
         setLoading(true); // Set status loading menjadi true
-        // Mengambil *semua* data properti dari json-server
-        fetch('http://localhost:3004/properties')
+        // Mengambil *semua* data properti dari serverless API
+        fetch(`${API_URL}properties`)
             .then((res) => res.json()) // Mengubah response menjadi JSON
             .then((data) => {
                 // 1. Filter: Ambil hanya properti yang statusPostingannya 'approved' (case-insensitive)

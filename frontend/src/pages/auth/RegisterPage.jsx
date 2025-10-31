@@ -5,9 +5,6 @@ import { registerUser } from "../../utils/api";
 import { AuthContext } from "../../context/AuthContext";
 import styles from "./LoginPage.module.css";
 import { motion } from "framer-motion";
-import { io } from "socket.io-client";
-
-const socket = io("http://localhost:3005");
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -29,12 +26,7 @@ const RegisterPage = () => {
   };
 
   const getTimestamp = () => {
-    const now = new Date();
-    return `${String(now.getDate()).padStart(2, "0")}/${
-      String(now.getMonth() + 1).padStart(2, "0")
-    }/${now.getFullYear()} ${String(now.getHours()).padStart(2, "0")}:${
-      String(now.getMinutes()).padStart(2, "0")
-    }:${String(now.getSeconds()).padStart(2, "0")}`;
+    return new Date().toISOString();
   };
 
   const handleSubmit = async (e) => {
@@ -49,13 +41,6 @@ const RegisterPage = () => {
       const savedUser = await registerUser(newUser);
 
       login(savedUser);
-
-      // Emit event ke server supaya HomeContent bisa update realtime
-      socket.emit("new_user", {
-        id: savedUser.id,
-        username: savedUser.username,
-        joinedAt: savedUser.joinedAt,
-      });
 
       Swal.fire(
         "Berhasil!",

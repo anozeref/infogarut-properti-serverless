@@ -8,7 +8,6 @@ import { API_URL, SOCKET_URL } from "../../../utils/constant";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
 import { smartParseDate, formatDisplayDate } from "../../../utils/dateUtils";
-import { createSocketConnection, setupSocketListeners, emitAdminAction } from "../../../utils/socketUtils";
 import { getAdminId, handleAdminAction, fetchAdminData, LoadingSpinner } from "../../../utils/adminUtils.jsx";
 import PropertyTable from "./components/tables/PropertyTable";
 import EditPropertyModal from "./components/components/EditPropertyModal";
@@ -26,8 +25,6 @@ export default function KelolaPropertiContent() {
   const [detailData, setDetailData] = useState(null);
   const [globalSearch, setGlobalSearch] = useState("");
 
-  // Initialize socket connection
-  const socket = createSocketConnection(SOCKET_URL);
 
   // Get nama owner dari ID - memoized untuk performa
   const getOwnerName = useCallback((ownerId) => {
@@ -55,25 +52,14 @@ export default function KelolaPropertiContent() {
     }
   }, []);
 
-  // Setup socket listener
+  // Setup data fetching
   useEffect(() => {
     fetchData(true);
-
-    const cleanup = setupSocketListeners(socket, {
-      propertyUpdate: () => fetchData(false),
-      update_property: () => fetchData(false),
-    });
-
-    return cleanup;
   }, [fetchData]);
 
   // Handler umum untuk aksi properti
   const handleAction = (config) => handleAdminAction({
     ...config,
-    emitSocket: config.skipSocketEmit !== true ? emitAdminAction : null,
-    socket,
-    socketAction: config.successData ? "adminPropertyUpdate" : "propertyUpdate",
-    socketData: config.successData,
     onSuccess: () => {
       fetchData(false);
       if (config.onSuccess) config.onSuccess();

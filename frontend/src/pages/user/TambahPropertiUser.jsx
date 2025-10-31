@@ -1,18 +1,17 @@
 // frontend/src/pages/user/TambahPropertiUser.jsx
 import React, { useState, useContext, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { io } from "socket.io-client";
 import Swal from "sweetalert2";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../../utils/constant";
 
-export default function TambahPropertiUser({ darkMode, socket: externalSocket }) {
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const fileInputRef = useRef(null);
-  const socket = io("http://localhost:3005");
+export default function TambahPropertiUser({ darkMode }) {
+   const { user } = useContext(AuthContext);
+   const navigate = useNavigate();
+   const fileInputRef = useRef(null);
   
 
   // ===================== STATE =====================
@@ -96,14 +95,9 @@ export default function TambahPropertiUser({ darkMode, socket: externalSocket })
   // ===================== HANDLER =====================
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
+  // Get timestamp saat ini (ISO format)
   const getTimestamp = () => {
-    const now = new Date();
-    return `${String(now.getDate()).padStart(2, "0")}/${String(
-      now.getMonth() + 1
-    ).padStart(2, "0")}/${now.getFullYear()} ${String(now.getHours()).padStart(
-      2,
-      "0"
-    )}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
+    return new Date().toISOString();
   };
 
   // ===================== FILE HANDLING =====================
@@ -151,43 +145,68 @@ export default function TambahPropertiUser({ darkMode, socket: externalSocket })
   };
   const allowDrop = (e) => e.preventDefault();
 
-  // ===================== SUBMIT =====================
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!user) {
-      Swal.fire("Oops!", "Kamu harus login dulu sebelum menambah properti!", "error");
-      return;
+  // ===================== VALIDATION =====================
+  const validateForm = () => {
+    // Validasi kecamatan dan desa wajib diisi
+    if (!form.kecamatan.trim()) {
+      Swal.fire("Error", "Kecamatan wajib diisi!", "error");
+      return false;
+    }
+    if (!form.desa.trim()) {
+      Swal.fire("Error", "Desa wajib diisi!", "error");
+      return false;
     }
 
+    // Validasi media
     const photoCount = mediaFiles.filter((f) => f.type.startsWith("image/")).length;
     if (photoCount < 2) {
       Swal.fire("Error", "Minimal 2 foto!", "error");
-      return;
+      return false;
     }
     if (mediaFiles.length < 3) {
       Swal.fire("Error", "Minimal total 3 file (foto+video)!", "error");
-      return;
+      return false;
     }
 
-    let periodeSewa = "";
+    // Validasi periode sewa jika jenis sewa
     if (form.jenisProperti === "Sewa") {
       if (!form.periodeAngka || !form.periodeSatuan) {
         Swal.fire("Error", "Isi periode sewa!", "error");
-        return;
+        return false;
       }
-      periodeSewa = `/${form.periodeAngka} ${form.periodeSatuan}`;
     }
 
+    return true;
+  };
+
+  // ===================== SUBMIT =====================
+   const handleSubmit = async (e) => {
+     e.preventDefault();
+     if (!user) {
+       Swal.fire("Oops!", "Kamu harus login dulu sebelum menambah properti!", "error");
+       return;
+     }
+
+     // Jalankan validasi
+     if (!validateForm()) {
+       return;
+     }
+
+    let periodeSewa = "";
+     if (form.jenisProperti === "Sewa") {
+       periodeSewa = `/${form.periodeAngka} ${form.periodeSatuan}`;
+     }
+
     try {
-      // Upload media ke server.js
+      // Upload media ke Vercel Blob via API route
       const formDataUpload = new FormData();
-      mediaFiles.forEach((f) => formDataUpload.append("media", f));
-      const uploadRes = await axios.post("http://localhost:3005/upload", formDataUpload, {
+      mediaFiles.forEach((f) => formDataUpload.append("files", f));
+      const uploadRes = await axios.post(`${API_URL}upload`, formDataUpload, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      const mediaNames = uploadRes.data.files;
+      const mediaUrls = uploadRes.data.files;
 
-      // Simpan properti ke db.json
+      // Simpan properti ke Supabase via API route
       const propertyData = {
         ...form,
         harga: Number(form.harga),
@@ -199,16 +218,11 @@ export default function TambahPropertiUser({ darkMode, socket: externalSocket })
         ownerId: user.id,
         userId: user.id,
         postedAt: getTimestamp(),
-        media: mediaNames,
+        media: mediaUrls,
         statusPostingan: "pending",
       };
 
-            await axios.post("http://localhost:3004/properties", propertyData);
-
-      // 🔔 Emit notifikasi realtime ke admin
-      if (socket && socket.connected) {
-        socket.emit("propertyUpdate"); // trigger ke admin
-      }
+      await axios.post(`${API_URL}properties`, propertyData);
 
       Swal.fire("Sukses!", `Properti "${form.namaProperti}" berhasil ditambahkan!`, "success");
       navigate("/user/propertipending");
@@ -349,18 +363,19 @@ export default function TambahPropertiUser({ darkMode, socket: externalSocket })
               style={inputStyle}
               required
             />
-            <label>Kecamatan</label>
-            <select
-              name="kecamatan"
-              value={form.kecamatan}
-              onChange={(e) => {
-                handleChange(e);
-                const selected = kecamatanList.find((k) => k.name === e.target.value);
-                setSelectedKecamatan(selected ? selected.id : "");
-              }}
-              className="form-select mb-2"
-              style={inputStyle}
-            >
+            <label>Kecamatan *</label>
+             <select
+               name="kecamatan"
+               value={form.kecamatan}
+               onChange={(e) => {
+                 handleChange(e);
+                 const selected = kecamatanList.find((k) => k.name === e.target.value);
+                 setSelectedKecamatan(selected ? selected.id : "");
+               }}
+               className="form-select mb-2"
+               style={inputStyle}
+               required
+             >
               <option value="">-- Pilih Kecamatan --</option>
               {kecamatanList.map((kec) => (
                 <option key={kec.id} value={kec.name}>
@@ -368,19 +383,20 @@ export default function TambahPropertiUser({ darkMode, socket: externalSocket })
                 </option>
               ))}
             </select>
-            <label>Desa</label>
-            <select
-              name="desa"
-              value={form.desa}
-              onChange={(e) => {
-                handleChange(e);
-                const selected = desaList.find((d) => d.name === e.target.value);
-                setSelectedDesa(selected ? selected.id : "");
-              }}
-              className="form-select mb-2"
-              style={inputStyle}
-              disabled={!selectedKecamatan}
-            >
+            <label>Desa *</label>
+             <select
+               name="desa"
+               value={form.desa}
+               onChange={(e) => {
+                 handleChange(e);
+                 const selected = desaList.find((d) => d.name === e.target.value);
+                 setSelectedDesa(selected ? selected.id : "");
+               }}
+               className="form-select mb-2"
+               style={inputStyle}
+               disabled={!selectedKecamatan}
+               required
+             >
               <option value="">-- Pilih Desa --</option>
               {desaList.map((desa) => (
                 <option key={desa.id} value={desa.name}>

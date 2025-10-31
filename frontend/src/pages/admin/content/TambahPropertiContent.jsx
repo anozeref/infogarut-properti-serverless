@@ -5,10 +5,7 @@ import { FaPlus, FaTimes, FaImage } from "react-icons/fa";
 import { ThemeContext } from "../DashboardAdmin";
 import styles from "./TambahPropertiContent.module.css";
 import axios from "axios";
-import { createSocketConnection, emitAdminAction } from "../../../utils/socketUtils";
-
-// Socket untuk real-time updates
-const socket = createSocketConnection("http://localhost:3005");
+import { API_URL } from "../../../utils/constant";
 
 // Halaman Tambah Properti Admin
 const TambahPropertiContent = () => {
@@ -32,15 +29,9 @@ const TambahPropertiContent = () => {
   // Handle perubahan form
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // Get timestamp saat ini
+  // Get timestamp saat ini (ISO format)
   const getTimestamp = () => {
-    const now = new Date();
-    return `${String(now.getDate()).padStart(2, "0")}/${String(
-      now.getMonth() + 1
-    ).padStart(2, "0")}/${now.getFullYear()} ${String(now.getHours()).padStart(
-      2,
-      "0"
-    )}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
+    return new Date().toISOString();
   };
 
   // Handle perubahan file
@@ -83,21 +74,43 @@ const TambahPropertiContent = () => {
     setMediaPreview(newMediaPreview);
   };
 
-  // Submit form
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("TambahPropertiContent: Submitting form");
+  // Validasi form
+  const validateForm = () => {
     if (mediaFiles.length < 1) {
       Swal.fire("Error", "Minimal unggah 1 media (foto/video) untuk properti baru!", "error");
-      return;
+      return false;
     }
-    setIsSubmitting(true);
+
+    // Validasi kecamatan dan desa wajib diisi
+    if (!form.kecamatan.trim()) {
+      Swal.fire("Error", "Kecamatan wajib diisi!", "error");
+      return false;
+    }
+    if (!form.desa.trim()) {
+      Swal.fire("Error", "Desa wajib diisi!", "error");
+      return false;
+    }
+
+    return true;
+  };
+
+  // Submit form
+   const handleSubmit = async (e) => {
+     e.preventDefault();
+     console.log("TambahPropertiContent: Submitting form");
+
+     // Jalankan validasi
+     if (!validateForm()) {
+       return;
+     }
+
+     setIsSubmitting(true);
     try {
       const formDataUpload = new FormData();
-      mediaFiles.forEach(f => formDataUpload.append("media", f));
-      console.log("TambahPropertiContent: Uploading media to localhost:3005/upload");
-      // Upload ke server 3005
-      const uploadRes = await axios.post("http://localhost:3005/upload", formDataUpload);
+      mediaFiles.forEach(f => formDataUpload.append("files", f));
+      console.log("TambahPropertiContent: Uploading media to Vercel Blob");
+      // Upload ke Vercel Blob via API route
+      const uploadRes = await axios.post(`${API_URL}upload`, formDataUpload);
       console.log("TambahPropertiContent: Upload response:", uploadRes.data);
 
       const propertiData = {
@@ -111,9 +124,8 @@ const TambahPropertiContent = () => {
         media: uploadRes.data.files,
         periodeSewa: form.jenisProperti === "Sewa" ? `/${form.periodeAngka} ${form.periodeSatuan}` : ""
       };
-      console.log("TambahPropertiContent: Posting property data to localhost:3004/properties");
-      await axios.post("http://localhost:3004/properties", propertiData);
-      emitAdminAction(socket, "propertyUpdate");
+      console.log("TambahPropertiContent: Posting property data to Supabase");
+      await axios.post(`${API_URL}properties`, propertiData);
       Swal.fire("Properti Berhasil Ditambahkan!", `Properti "${form.namaProperti}" telah berhasil ditambahkan ke sistem dan akan muncul di halaman publik setelah disetujui.`, "success");
 
       setForm(initialFormState);
@@ -161,8 +173,8 @@ const TambahPropertiContent = () => {
             <h4>2. Lokasi & Detail</h4>
             <div className={styles.formGrid}>
               <div className={styles.formGroup}><label>Lokasi (Alamat Lengkap)</label><input type="text" name="lokasi" value={form.lokasi} onChange={handleChange} required/></div>
-              <div className={styles.formGroup}><label>Kecamatan</label><input type="text" name="kecamatan" value={form.kecamatan} onChange={handleChange}/></div>
-              <div className={styles.formGroup}><label>Desa</label><input type="text" name="desa" value={form.desa} onChange={handleChange}/></div>
+              <div className={styles.formGroup}><label>Kecamatan *</label><input type="text" name="kecamatan" value={form.kecamatan} onChange={handleChange} required/></div>
+              <div className={styles.formGroup}><label>Desa *</label><input type="text" name="desa" value={form.desa} onChange={handleChange} required/></div>
               <div className={styles.formGroup}><label>Luas Tanah (m²)</label><input type="number" name="luasTanah" value={form.luasTanah} onChange={handleChange}/></div>
               <div className={styles.formGroup}><label>Luas Bangunan (m²)</label><input type="number" name="luasBangunan" value={form.luasBangunan} onChange={handleChange}/></div>
               <div className={styles.formGroup}><label>Kamar Tidur</label><input type="number" name="kamarTidur" value={form.kamarTidur} onChange={handleChange}/></div>

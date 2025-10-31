@@ -6,6 +6,7 @@ import styles from "./components/CardProperty.module.css";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../context/AuthContext";
 import { useOutletContext } from "react-router-dom";
+import { API_URL } from "../../utils/constant";
 
 export default function PropertiAktif() {
   const { darkMode } = useOutletContext();
@@ -28,7 +29,7 @@ export default function PropertiAktif() {
 
     const fetchActiveProperties = async () => {
       try {
-        const res = await axios.get("http://localhost:3004/properties");
+        const res = await axios.get(`${API_URL}properties`);
 
         // 🔍 Filter: hanya milik user yg login & status approved
         const filtered = res.data
