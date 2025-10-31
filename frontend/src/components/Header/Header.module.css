@@ -1,0 +1,143 @@
+/* src/components/Header/Header.module.css */
+
+/* --- Gaya Dasar (Default) --- */
+.header {
+  width: 100%;
+  background-color: var(--background-light);
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: padding 0.3s ease;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* <<< Memastikan logo sejajar dengan rightSection */
+  transition: padding 0.3s ease;
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
+  display: block; /* Mencegah spasi ekstra di bawah gambar */
+  transition: height 0.3s ease;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center; /* <<< Memastikan nav, userIcon, logoutBtn sejajar */
+  gap: 2rem;
+  transition: gap 0.3s ease;
+}
+
+.nav {
+  display: flex;
+  align-items: center; /* <<< Menyelaraskan link di dalam nav */
+  gap: 2rem;
+  transition: gap 0.3s ease;
+}
+
+.navLink {
+  text-decoration: none;
+  color: var(--text-dark);
+  font-weight: 500;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s ease, color 0.3s ease;
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  color: var(--secondary-blue);
+}
+
+.navLink.active {
+  color: var(--secondary-blue);
+  border-bottom: 2px solid var(--secondary-blue);
+}
+
+.userIcon,
+.logoutBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0; /* Hapus padding agar lebih mudah sejajar */
+  display: flex; /* Aktifkan flex untuk align-items */
+  align-items: center; /* Tengahkan ikon secara vertikal */
+  transition: color 0.2s ease, transform 0.2s ease;
+  margin: 0; /* <<< Hapus margin atas/bawah */
+}
+
+.userIcon {
+  color: var(--text-dark);
+}
+.logoutBtn {
+  color: #ff5555;
+}
+
+.userIcon:hover {
+  color: #007bff;
+  transform: scale(1.1);
+}
+.logoutBtn:hover {
+  color: #d22;
+  transform: scale(1.1);
+}
+
+
+/* ============================================= */
+/* ==== PENYESUAIAN RESPONSIVE ==== */
+/* ============================================= */
+
+/* --- Tablet (<= 992px) --- */
+@media (max-width: 992px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+  .rightSection {
+    gap: 1.5rem;
+  }
+  .nav {
+    gap: 1.5rem;
+  }
+}
+
+/* --- Mobile (<= 768px) --- */
+@media (max-width: 768px) {
+  .header {
+      padding: 0.75rem 0;
+  }
+  .container {
+    padding: 0 1rem;
+  }
+  .logo img {
+    height: 35px;
+  }
+  .rightSection {
+    gap: 1rem;
+  }
+  .nav {
+     gap: 1rem;
+     /* display: none; */ /* Aktifkan jika ingin sembunyikan nav */
+  }
+  .navLink {
+      font-size: 0.9rem;
+      padding-bottom: 0.4rem;
+  }
+}
+
+/* --- Mobile Sangat Kecil (<= 480px) --- */
+@media (max-width: 480px) {
+    .rightSection {
+      gap: 0.75rem;
+    }
+    .nav {
+        gap: 0.75rem;
+    }
+}

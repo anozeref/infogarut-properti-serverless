@@ -1,0 +1,467 @@
+/* src/pages/PropertiDetail/PropertiDetail.module.css */
+
+/* --- Layout Dasar Halaman --- */
+
+/**
+ * Kontainer utama untuk seluruh konten halaman detail properti.
+ * Membatasi lebar maksimum dan menempatkan konten di tengah.
+ */
+.pageContainer {
+  max-width: 1200px; /* Lebar maksimum konten */
+  margin: 0 auto;   /* Tengah secara horizontal */
+  padding: 2rem;    /* Jarak di sekeliling konten (default) */
+  transition: padding 0.3s ease; /* Transisi padding untuk responsif */
+}
+
+/* --- Bagian Header Halaman (Judul, Lokasi, Tombol Kembali) --- */
+
+/**
+ * Pembungkus untuk bagian header halaman (tombol kembali, judul, lokasi).
+ */
+.headerSection {
+  margin-bottom: 2rem; /* Jarak bawah ke bagian galeri */
+}
+
+/**
+ * Gaya untuk tautan "Kembali ke Properti".
+ */
+.backLink {
+  display: inline-flex;  /* Agar ikon dan teks sejajar */
+  align-items: center;  /* Tengahkan ikon dan teks vertikal */
+  gap: 0.5rem;          /* Jarak antara ikon dan teks */
+  color: var(--secondary-blue); /* Warna teks biru */
+  text-decoration: none; /* Hapus garis bawah */
+  font-weight: 600;       /* Teks tebal */
+  margin-bottom: 1rem;  /* Jarak bawah ke judul */
+  transition: color 0.2s ease; /* Transisi warna saat hover */
+}
+.backLink:hover {
+  color: var(--primary-blue); /* Warna biru tua saat hover */
+}
+
+/**
+ * Gaya untuk judul utama (nama properti).
+ */
+.titleLocation h1 {
+  font-size: 2.5rem; /* Ukuran font judul (default) */
+  margin: 0;       /* Hapus margin default */
+  transition: font-size 0.3s ease; /* Transisi font */
+}
+
+/**
+ * Gaya untuk teks lokasi di bawah judul.
+ */
+.titleLocation p {
+  font-size: 1.1rem; /* Ukuran font lokasi */
+  color: #6c757d;   /* Warna teks abu-abu */
+  margin: 0.5rem 0 0 0; /* Jarak atas */
+  display: flex;     /* Sejajarkan ikon lokasi dan teks */
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* --- Bagian Galeri Gambar --- */
+
+/**
+ * Mengatur layout galeri (gambar utama dan thumbnail) menggunakan Flexbox.
+ */
+.gallerySection {
+  display: flex;     /* Gambar utama dan thumbnail berjajar horizontal (default) */
+  gap: 1rem;         /* Jarak antara gambar utama dan thumbnail */
+  margin-bottom: 2rem; /* Jarak bawah ke bagian detail */
+  height: 450px;     /* Tinggi tetap untuk area galeri (default) */
+  transition: height 0.3s ease, flex-direction 0s ease 0.3s; /* Transisi tinggi */
+}
+
+/**
+ * Kontainer untuk gambar utama (sebelah kiri).
+ * Mengisi sebagian besar ruang (`flex: 3`).
+ */
+.mainImage {
+  flex: 3;          /* Mengambil 3 bagian dari ruang fleksibel */
+  overflow: hidden;   /* Sembunyikan bagian gambar yang keluar dari border-radius */
+  border-radius: 12px; /* Sudut melengkung */
+}
+
+/**
+ * Gaya untuk elemen <img> di dalam kontainer gambar utama.
+ */
+.mainImage img {
+  width: 100%;       /* Gambar mengisi lebar kontainer */
+  height: 100%;      /* Gambar mengisi tinggi kontainer */
+  object-fit: cover; /* Gambar menutupi area tanpa distorsi, mungkin terpotong */
+}
+
+/**
+ * Kontainer untuk gambar-gambar kecil (thumbnail) di sebelah kanan.
+ * Mengisi sisa ruang (`flex: 1`).
+ */
+.thumbnailImages {
+  flex: 1;              /* Mengambil 1 bagian dari ruang fleksibel (default) */
+  display: flex;        /* Gunakan Flexbox untuk thumbnail */
+  flex-direction: column; /* Susun thumbnail secara vertikal (default) */
+  gap: 1rem;            /* Jarak antar thumbnail */
+}
+
+/**
+ * Gaya untuk setiap elemen <img> thumbnail.
+ */
+.thumbnailImages img {
+  width: 100%;       /* Thumbnail mengisi lebar kontainer (default) */
+  /* Hitung tinggi thumbnail: (total tinggi - total jarak gap) / jumlah gambar */
+  height: calc((100% - 3rem) / 4); /* Tinggi default */
+  object-fit: cover; /* Gambar menutupi area thumbnail */
+  border-radius: 8px; /* Sudut thumbnail melengkung */
+  cursor: pointer;    /* Kursor tangan saat diarahkan */
+  border: 3px solid transparent; /* Border transparan (untuk efek hover/aktif) */
+  transition: border-color 0.3s ease, transform 0.3s ease, width 0.3s ease, height 0.3s ease; /* Transisi */
+}
+
+/**
+ * Efek hover pada thumbnail.
+ */
+.thumbnailImages img:hover {
+  border-color: #007bff80; /* Warna border biru transparan saat hover */
+}
+
+/**
+ * Gaya khusus untuk thumbnail yang sedang aktif (sesuai gambar utama).
+ * Class ini ditambahkan secara dinamis oleh React.
+ */
+.thumbnailImages img.activeThumbnail {
+  border-color: var(--secondary-blue); /* Warna border biru solid saat aktif */
+}
+
+/* --- Bagian Grid Detail Properti & Kartu Agen --- */
+
+/**
+ * Mengatur layout dua kolom (info properti & kartu agen) menggunakan CSS Grid.
+ */
+.detailsGrid {
+  display: grid;
+  /* Kolom kiri (info) 2 bagian, kolom kanan (agen) 1 bagian lebarnya (default) */
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;           /* Jarak antar kolom (default) */
+  align-items: flex-start; /* Sejajarkan bagian atas kedua kolom */
+  transition: grid-template-columns 0s ease 0.3s, gap 0.3s ease; /* Transisi layout */
+}
+
+/**
+ * Gaya untuk kotak info properti (kolom kiri).
+ */
+.propertyInfo {
+  background: #fff;    /* Latar belakang putih */
+  padding: 2rem;       /* Jarak internal (default) */
+  border-radius: 12px;  /* Sudut melengkung */
+  border: 1px solid #e9ecef; /* Garis tepi tipis */
+  transition: padding 0.3s ease; /* Transisi padding */
+}
+
+/**
+ * Mengatur layout baris harga dan tag menggunakan Flexbox.
+ */
+.priceType {
+  display: flex;
+  justify-content: space-between; /* Tag di kiri, harga di kanan */
+  align-items: center;          /* Sejajarkan vertikal di tengah */
+  margin-bottom: 1.5rem;         /* Jarak bawah ke judul "Detail Properti" */
+  gap: 1rem;                    /* Jarak antara grup tag dan harga jika terlalu dekat */
+  transition: flex-direction 0s ease 0.3s, align-items 0s ease 0.3s, gap 0.3s ease; /* Transisi */
+}
+
+/**
+ * Kontainer untuk tag tipe dan jenis agar bisa diberi jarak.
+ */
+.tagsContainer {
+  display: flex; /* Tag berjajar horizontal */
+  gap: 0.75rem;   /* Jarak antar tag */
+  flex-wrap: wrap; /* Izinkan tag pindah baris jika perlu */
+}
+
+/**
+ * Gaya untuk tag tipe properti (misal: "Villa").
+ */
+.typeTag {
+  background-color: #e7f1ff; /* Latar biru muda */
+  color: var(--secondary-blue); /* Teks biru */
+  padding: 0.5rem 1rem;     /* Jarak internal tag */
+  border-radius: 20px;      /* Bentuk pil (sangat melengkung) */
+  font-weight: 600;       /* Teks tebal */
+}
+
+/**
+ * Gaya untuk tag jenis properti (misal: "Kredit").
+ */
+.jenisTag {
+  background-color: #f0f0f0; /* Latar abu-abu muda */
+  color: #555;            /* Teks abu-abu tua */
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/**
+ * Gaya untuk teks harga properti.
+ */
+.price {
+  font-size: 2.2rem;     /* Ukuran font besar (default) */
+  font-weight: 700;       /* Teks sangat tebal */
+  color: var(--primary-blue); /* Warna biru tua */
+  white-space: nowrap; /* Mencegah harga pindah baris (default) */
+  transition: font-size 0.3s ease, white-space 0s ease 0.3s; /* Transisi */
+}
+
+/**
+ * Gaya untuk subjudul di dalam info properti (misal: "Detail Properti", "Deskripsi").
+ */
+.propertyInfo h2 {
+  font-size: 1.5rem;   /* Ukuran font subjudul */
+  margin-top: 2rem;    /* Jarak atas */
+  margin-bottom: 1rem; /* Jarak bawah */
+}
+
+/**
+ * Garis pemisah horizontal di dalam info properti.
+ */
+.divider {
+  border: none; /* Hapus border default */
+  border-top: 1px solid #e9ecef; /* Garis atas tipis */
+  margin: 0;       /* Hapus margin default */
+}
+
+/**
+ * Mengatur layout spesifikasi properti (kamar tidur, mandi, luas) menggunakan Flexbox.
+ */
+.specs {
+  display: flex; /* Default: berjajar horizontal */
+  justify-content: space-around; /* Beri jarak merata antar item spesifikasi */
+  padding: 1.5rem 0;             /* Jarak atas/bawah */
+  text-align: center;           /* Teks rata tengah */
+  /* Transisi untuk perubahan layout & styling di media query */
+  transition: flex-direction 0s ease 0.3s, align-items 0s ease 0.3s, gap 0.3s ease, padding 0.3s ease, background-color 0.3s ease, border-top 0.3s ease, border-bottom 0.3s ease, margin 0.3s ease;
+}
+
+/**
+ * Gaya untuk setiap item spesifikasi (ikon + teks).
+ */
+.specs div {
+  display: flex;
+  flex-direction: column; /* Default: Susun ikon di atas teks */
+  align-items: center;   /* Tengahkan ikon dan teks */
+  gap: 0.5rem;          /* Jarak antara ikon dan teks */
+  color: #495057;       /* Warna teks abu-abu */
+  font-weight: 500;       /* Teks sedikit tebal */
+  /* Transisi untuk perubahan layout & styling di media query */
+  transition: flex-direction 0s ease 0.3s, gap 0.3s ease, width 0.3s ease;
+}
+
+/**
+ * Gaya untuk paragraf deskripsi properti.
+ */
+.description {
+  line-height: 1.7;    /* Jarak antar baris agar mudah dibaca */
+  color: #6c757d;       /* Warna teks abu-abu */
+  transition: font-size 0.3s ease, line-height 0.3s ease; /* Transisi */
+  /* Memastikan teks pindah baris jika kata terlalu panjang */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* --- Gaya Kartu Agen (Kolom Kanan) --- */
+
+/**
+ * Gaya untuk kotak kartu kontak agen.
+ */
+.agentCard {
+  background-color: #f8f9fa; /* Latar abu-abu muda */
+  border: 1px solid #e9ecef; /* Garis tepi */
+  border-radius: 12px;      /* Sudut melengkung */
+  padding: 1.5rem;          /* Jarak internal (diperkecil) */
+  text-align: center;       /* Teks rata tengah */
+  position: sticky;         /* Membuat kartu "menempel" saat scroll (default) */
+  top: 100px;               /* Jarak dari atas viewport saat menempel */
+  transition: padding 0.3s ease, position 0s ease 0.3s; /* Transisi */
+}
+
+/**
+ * Gaya untuk bagian kontak (email, telepon) di dalam kartu agen.
+ */
+.agentContact {
+  text-align: left;        /* Teks rata kiri */
+  margin-bottom: 1.5rem;     /* Jarak bawah ke tombol */
+  border-top: none;          /* Garis atas dihapus */
+  padding-top: 0;            /* Jarak atas dihapus */
+}
+
+/**
+ * Gaya untuk paragraf di dalam bagian kontak.
+ */
+.agentContact p {
+  margin: 0.5rem 0; /* Jarak atas/bawah antar baris kontak */
+}
+
+/**
+ * Gaya untuk tombol "Hubungi Agen".
+ */
+.contactButton {
+  width: 100%;             /* Tombol mengisi lebar kartu */
+  padding: 1rem;           /* Jarak internal tombol */
+  background-color: var(--secondary-blue); /* Warna latar biru */
+  color: white;             /* Warna teks putih */
+  border: none;             /* Hapus border */
+  border-radius: 8px;      /* Sudut melengkung */
+  font-size: 1.1rem;       /* Ukuran font */
+  font-weight: 600;       /* Teks tebal */
+  cursor: pointer;          /* Kursor tangan */
+  transition: background-color 0.3s ease; /* Transisi warna latar saat hover */
+  /* Tambahan untuk ikon dan teks sejajar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/**
+ * Efek hover untuk tombol "Hubungi Agen".
+ */
+.contactButton:hover {
+  background-color: #0056b3; /* Warna latar lebih gelap saat hover */
+}
+
+/**
+ * Style untuk menghilangkan garis bawah link pembungkus tombol (jika ada).
+ */
+.contactButtonLink {
+  text-decoration: none; /* Hilangkan garis bawah */
+}
+
+/**
+ * Style untuk placeholder jika gambar utama tidak ada.
+ */
+ .noImagePlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+    color: #aaa;
+    font-style: italic;
+ }
+
+ /**
+  * Style untuk periode sewa di baris harga.
+  */
+ .periodeSewa {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #6c757d;
+    margin-left: 0.5rem;
+    white-space: nowrap; /* Mencegah pindah baris */
+ }
+
+/**
+ * Style khusus untuk thumbnail aktif (border biru).
+ */
+.activeThumbnail {
+    border-color: var(--secondary-blue); /* Warna border solid saat aktif */
+}
+
+
+/* ============================================= */
+/* ==== PENYESUAIAN RESPONSIVE ==== */
+/* ============================================= */
+
+/* Berlaku jika lebar layar MAKSIMAL 768px (Tablet potret & HP) */
+@media (max-width: 768px) {
+  /* Ubah layout galeri gambar menjadi vertikal */
+  .gallerySection {
+    flex-direction: column;
+    height: auto;
+  }
+  /* Buat thumbnail berjajar horizontal dan bisa di-scroll */
+  .thumbnailImages {
+    flex-direction: row;
+    overflow-x: auto;
+    flex: none;
+    padding-bottom: 10px;
+  }
+  /* Atur ukuran tetap thumbnail di mode horizontal */
+  .thumbnailImages img {
+    width: 80px;
+    height: 60px;
+    flex-shrink: 0; /* Cegah menyusut */
+  }
+  /* Ubah grid detail menjadi satu kolom */
+  .detailsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  /* Hapus efek sticky kartu agen */
+  .agentCard {
+    position: static;
+    top: auto;
+  }
+  /* Perkecil font judul */
+  .titleLocation h1 {
+     font-size: 2rem;
+  }
+  /* Perkecil font harga */
+  .price {
+      font-size: 1.8rem;
+  }
+}
+
+/* Berlaku jika lebar layar MAKSIMAL 480px (HP Kecil) */
+@media (max-width: 480px) {
+    /* Kurangi padding halaman */
+    .pageContainer {
+        padding: 1rem;
+    }
+    /* Perkecil lagi font judul */
+    .titleLocation h1 {
+        font-size: 1.7rem;
+    }
+    /* Kurangi padding kartu info dan agen */
+     .propertyInfo, .agentCard {
+        padding: 1rem;
+    }
+    /* Susun Price & Tags secara vertikal */
+    .priceType {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    /* Perkecil harga dan izinkan wrap */
+    .price {
+      font-size: 1.6rem;
+      white-space: normal;
+    }
+    /* Izinkan tag pindah baris */
+    .tagsContainer {
+       flex-wrap: wrap;
+    }
+    /* Susun Specs secara vertikal, rata kiri, beri border */
+    .specs {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        padding: 1rem 0; /* Padding atas bawah saja */
+        background-color: transparent; /* Hapus background */
+        border-top: 1px solid #eee;    /* Ganti dgn garis atas */
+        border-bottom: 1px solid #eee; /* Tambah garis bawah */
+        margin: 1.5rem 0;             /* Jarak atas bawah */
+    }
+    /* Sejajarkan ikon dan teks Specs secara horizontal */
+    .specs div {
+        flex-direction: row;
+        gap: 0.75rem; /* Jarak ikon & teks */
+        width: 100%; /* Pastikan mengisi lebar */
+    }
+    /* Perkecil font deskripsi dan rapatkan baris */
+    .description {
+      line-height: 1.5;
+      font-size: 0.85rem;
+    }
+}

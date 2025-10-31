@@ -1,0 +1,72 @@
+.backdrop {
+  position: fixed; inset: 0; background-color: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(4px); display: flex; align-items: center;
+  justify-content: center; z-index: 1050; padding: 20px;
+}
+.modal {
+  background: var(--main-bg-color); border-radius: 12px;
+  width: 90%; max-width: 800px;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+  display: flex; flex-direction: column; max-height: 90vh;
+}
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 24px; border-bottom: 1px solid var(--border-color); flex-shrink: 0;
+}
+.header h3 { margin: 0; font-size: 1.25rem; color: var(--text-color); }
+.closeButton {
+  background: none; border: none; font-size: 1.2rem;
+  color: var(--text-color-secondary); cursor: pointer;
+  width: 36px; height: 36px; border-radius: 50%; display: flex;
+  align-items: center; justify-content: center; transition: background-color 0.2s;
+}
+.closeButton:hover { background-color: #f3f4f6; }
+[data-theme="dark"] .closeButton:hover { background-color: #374151; }
+
+.formBody { padding: 24px; overflow-y: auto; }
+.formSection { margin-bottom: 24px; }
+.formSection h4 { margin-top: 0; margin-bottom: 16px; color: var(--text-color); font-weight: 600; font-size: 1rem; }
+
+.formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+.formGroup { display: flex; flex-direction: column; }
+.formGroup label { margin-bottom: 8px; font-weight: 500; color: var(--text-color); font-size: 0.9rem; }
+.formGroup input, .formGroup select, .formGroup textarea {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--border-color);
+  border-radius: 8px; background-color: var(--bg-color); color: var(--text-color);
+  font-size: 0.95rem; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.formGroup input:focus, .formGroup select:focus, .formGroup textarea:focus {
+  outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.periodeSewa { grid-column: span 2; display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+
+.mediaPreview { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+.mediaItem { position: relative; width: 100px; height: 75px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); cursor: grab; }
+.mediaItem:active { cursor: grabbing; }
+.mediaItem img { width: 100%; height: 100%; object-fit: cover; }
+.removeButton {
+  position: absolute; top: 4px; right: 4px; background-color: rgba(0, 0, 0, 0.6);
+  color: white; border: none; border-radius: 50%; width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  opacity: 0; transition: opacity 0.2s;
+}
+.mediaItem:hover .removeButton { opacity: 1; }
+
+.footer {
+  display: flex; justify-content: flex-end; gap: 12px;
+  margin-top: 16px; padding: 16px 24px; border-top: 1px solid var(--border-color); flex-shrink: 0;
+}
+.saveBtn, .cancelBtn {
+  padding: 10px 20px; border: none; border-radius: 8px;
+  font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px; transition: background-color 0.2s;
+}
+.saveBtn { background-color: #3b82f6; color: white; }
+.saveBtn:hover { background-color: #2563eb; }
+.saveBtn:disabled { background-color: #9ca3af; cursor: not-allowed; }
+.cancelBtn { background-color: var(--main-bg-color); color: var(--text-color); border: 1px solid var(--border-color); }
+.cancelBtn:hover { background-color: #f3f4f6; }
+[data-theme="dark"] .cancelBtn:hover { background-color: #374151; }
+
+@media (max-width: 768px) { .formGrid { grid-template-columns: 1fr; } .periodeSewa { grid-column: auto; } }

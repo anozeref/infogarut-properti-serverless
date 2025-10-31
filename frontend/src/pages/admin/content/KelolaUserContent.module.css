@@ -1,0 +1,123 @@
+/* === Layout Utama & Header === */
+.container { display: flex; flex-direction: column; gap: 24px; }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+.header h2 { margin: 0; font-size: 1.75rem; font-weight: 700; color: var(--text-color); }
+.header p { margin-top: 4px; color: var(--text-color-secondary); }
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.searchContainer { position: relative; width: 100%; }
+.searchInput {
+  min-width: 320px; padding: 10px 16px 10px 40px; border: 1px solid var(--border-color);
+  border-radius: 8px; background-color: var(--main-bg-color); color: var(--text-color);
+  font-size: 0.95rem; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.searchInput:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); }
+.searchIcon { position: absolute; top: 50%; left: 16px; transform: translateY(-50%); color: var(--text-color-secondary); font-size: 0.9rem; }
+
+.toggleContainer { display: flex; align-items: center; gap: 10px; }
+.toggleContainer span { font-weight: 500; font-size: 0.8rem; color: var(--text-color-secondary); }
+.toggleContainer label { position: relative; display: inline-block; width: 44px; height: 24px; }
+.toggleContainer input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border-radius: 24px; transition: background-color 0.3s; }
+.sliderBall { position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: transform 0.3s; }
+.toggleContainer input:checked + .slider { background-color: #28a745; }
+.toggleContainer input:checked + .slider .sliderBall { transform: translateX(20px); }
+
+/* === Card & Tabel === */
+.tableWrapper {
+  background-color: var(--main-bg-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+.cardHeader {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 24px; border-bottom: 1px solid var(--border-color);
+}
+.cardHeader svg { font-size: 1.25rem; color: #3b82f6; }
+.cardHeader h3 { margin: 0; font-size: 1.25rem; font-weight: 600; color: var(--text-color); }
+
+.tableScroll { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.table th, .table td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border-color); color: var(--text-color); vertical-align: middle; white-space: nowrap; }
+.table th { color: var(--text-color-secondary); font-weight: 600; background-color: #f9fafb; }
+.table tr:last-child td { border-bottom: none; }
+[data-theme='dark'] .table th { background-color: #1f2937; }
+
+.truncateText { max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* === Status Badge & Aksi === */
+.statusCell .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; }
+.approved { background-color: #d1fae5; color: #065f46; }
+.pending { background-color: #fef3c7; color: #92400e; }
+.suspended { background-color: #feebc8; color: #9c4221; }
+.banned { background-color: #fee2e2; color: #991b1b; }
+
+.actions { display: flex; align-items: center; gap: 4px; }
+.iconBtn { background: none; border: none; padding: 8px; margin: 0 2px; cursor: pointer; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; transition: background-color 0.2s; }
+.iconBtn svg { font-size: 16px; transition: color 0.2s; }
+
+.approveIcon { color: #28a745; }
+.suspendIcon { color: #f59e0b; }
+.unsuspendIcon { color: #17a2b8; }
+.deleteIcon { color: #dc3545; }
+.infoIcon { color: #6c757d; }
+.iconBtn:hover { background-color: #f3f4f6; }
+[data-theme='dark'] .iconBtn:hover { background-color: #374151; }
+
+/* === Pagination, Spinner, Empty State === */
+.spinnerContainer, .emptyState { text-align: center; padding: 80px; color: var(--text-color-secondary); font-style: italic; }
+.spinner { margin: 0 auto; width: 48px; height: 48px; border: 5px solid #f3f4f6; border-top: 5px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+[data-theme='dark'] .spinner { border-color: #374151; border-top-color: #3b82f6; }
+
+/* === Responsive Media Queries === */
+@media (max-width: 1366px) { .hideOnSmall { display: none; } }
+@media (max-width: 1200px) {
+  .header { flex-direction: column; align-items: flex-start; }
+  .controls { width: 100%; flex-direction: row; justify-content: space-between; }
+  .searchInput { min-width: 250px; }
+}
+
+/* === Global Styles for Swal Modal (BAGIAN YANG DIPERBAIKI) === */
+:global(.swal-suspend-override .swal-radio-container) {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+:global(.swal-suspend-override .swal-radio-option) {
+  display: block;
+  cursor: pointer;
+}
+:global(.swal-suspend-override .swal-radio-option input) {
+  display: none; /* Sembunyikan radio button asli */
+}
+:global(.swal-suspend-override .swal-radio-option span) {
+  display: block;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  color: #555;
+}
+:global(.swal-suspend-override .swal-radio-option:hover span) {
+  background-color: #f9f9f9;
+}
+:global(.swal-suspend-override .swal-radio-option input:checked + span) {
+  background-color: #fff8e1;
+  border-color: #f59e0b;
+  font-weight: 600;
+  color: #9c4221;
+}

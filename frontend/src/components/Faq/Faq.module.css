@@ -1,0 +1,130 @@
+/* src/components/Faq/Faq.module.css */
+
+/* --- Gaya Dasar (Default) --- */
+.faqSection {
+  background-color: var(--primary-blue-light);
+  color: var(--text-light);
+  padding: 2.5rem 0; /* Padding vertikal default */
+  transition: padding 0.3s ease; /* Transisi padding */
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem; /* Padding horizontal default */
+  text-align: center;
+  transition: padding 0.3s ease; /* Transisi padding */
+}
+
+.title {
+  font-size: 2.5rem; /* Ukuran font judul default */
+  margin-bottom: 2rem; /* Jarak bawah default */
+  transition: font-size 0.3s ease, margin-bottom 0.3s ease; /* Transisi */
+}
+
+.faqList {
+  text-align: left;
+}
+
+.faqItem {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1rem 0; /* Padding vertikal item default */
+  cursor: pointer;
+  transition: padding 0.3s ease; /* Transisi padding */
+}
+
+.faqQuestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem; /* Ukuran font pertanyaan default */
+  font-weight: 500;
+  transition: font-size 0.3s ease; /* Transisi font */
+}
+
+.icon {
+  transition: transform 0.3s ease;
+  margin-left: 1rem; /* Beri jarak ikon dari teks yg panjang */
+  flex-shrink: 0; /* Cegah ikon menyusut */
+}
+
+.faqAnswer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  color: rgba(255, 255, 255, 0.85); /* Sedikit tingkatkan kontras jawaban */
+  padding: 0 1rem;
+  line-height: 1.7;
+  font-size: 1rem; /* Ukuran font jawaban default */
+  transition: font-size 0.3s ease; /* Transisi font */
+}
+
+/* Gaya saat accordion terbuka */
+.faqItem.open .faqAnswer {
+  max-height: 200px; /* Cukup untuk beberapa baris */
+  padding: 1.2rem 1rem 0 1rem; /* Padding atas/bawah saat terbuka */
+}
+
+.faqItem.open .icon {
+  transform: rotate(180deg);
+}
+
+
+/* ============================================= */
+/* ==== PENYESUAIAN UNTUK LAYAR KECIL ==== */
+/* ============================================= */
+
+/* Berlaku jika lebar layar MAKSIMAL 768px (Tablet & HP) */
+@media (max-width: 768px) {
+  .faqSection {
+    padding: 2rem 0; /* Kurangi padding section */
+  }
+
+  .container {
+    padding: 0 1rem; /* Kurangi padding kontainer */
+  }
+
+  .title {
+    font-size: 2rem; /* Perkecil font judul */
+    margin-bottom: 1.5rem; /* Kurangi jarak bawah */
+  }
+
+  .faqItem {
+    padding: 0.9rem 0; /* Kurangi padding item */
+  }
+
+  .faqQuestion {
+    font-size: 1.1rem; /* Perkecil font pertanyaan */
+  }
+
+  .faqAnswer {
+    font-size: 0.95rem; /* Perkecil font jawaban */
+    line-height: 1.6; /* Rapatkan sedikit */
+  }
+
+  /* Kurangi padding jawaban saat terbuka */
+  .faqItem.open .faqAnswer {
+     padding: 1rem 1rem 0 1rem;
+     max-height: 250px; /* Tambah sedikit max-height jika jawaban panjang */
+  }
+}
+
+/* Berlaku jika lebar layar MAKSIMAL 480px (HP Kecil) */
+@media (max-width: 480px) {
+   .title {
+     font-size: 1.8rem; /* Perkecil lagi font judul */
+   }
+   .faqItem {
+     padding: 0.8rem 0; /* Kurangi lagi padding item */
+   }
+   .faqQuestion {
+     font-size: 1rem; /* Perkecil lagi font pertanyaan */
+   }
+   .faqAnswer {
+     font-size: 0.9rem; /* Perkecil lagi font jawaban */
+   }
+    /* Kurangi padding jawaban saat terbuka */
+  .faqItem.open .faqAnswer {
+     padding: 0.8rem 0.5rem 0 0.5rem; /* Kurangi padding horizontal jawaban */
+  }
+}

@@ -1,0 +1,15 @@
+.footer {
+  text-align: center;
+  padding: 20px 10px;
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 14px;
+  border-top: 1px solid #ddd;
+  transition: all 0.3s ease;
+}
+
+.footer.dark {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+  border-top: 1px solid #444;
+}

@@ -1,0 +1,64 @@
+.sidebar {
+  width: 250px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding: 20px;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+  height: calc(100vh - 52px);
+  display: flex;
+  flex-direction: column;
+}
+
+.menuList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+.menuList li {
+  margin-bottom: 12px;
+}
+
+.menuList li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 500;
+  background: #6365f191;
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+}
+
+.menuList li a:hover {
+  background: #4f46e5;
+  color: #fff;
+  transform: translateX(3px);
+}
+
+.icon {
+  font-size: 18px;
+}
+
+/* Efek aktif (menu sedang dibuka) */
+.active {
+  background: #4f46e5;
+  color: #fff;
+  box-shadow: inset 2px 0 0 #312e81;
+}
+
+/* Scroll sidebar kalau menu panjang */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

@@ -1,0 +1,180 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+.header p {
+  margin-top: 4px;
+  color: var(--text-color-secondary);
+}
+
+.formCard {
+  background-color: var(--main-bg-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  padding: 32px;
+}
+
+.formSection {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+.formSection:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.formSection h4 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 24px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+.formGroup label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+.formGroup input, .formGroup select, .formGroup textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.formGroup input:focus, .formGroup select:focus, .formGroup textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.periodeSewa {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+
+.mediaUploader {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+}
+
+.dropZone {
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+  color: var(--text-color-secondary);
+}
+.dropZone:hover {
+  border-color: #3b82f6;
+  background-color: #f9fafb;
+}
+[data-theme="dark"] .dropZone:hover {
+  background-color: #2c3a4b;
+}
+.dropZone svg { font-size: 2rem; }
+.dropZone p { font-weight: 600; margin: 8px 0; }
+.dropZone span { font-size: 0.8rem; }
+
+.mediaPreview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.mediaItem {
+  position: relative;
+  width: 120px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+.mediaItem img, .mediaItem video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mediaItem button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.mediaItem:hover button {
+  opacity: 1;
+}
+
+.submitSection {
+  padding-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+.submitBtn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+.submitBtn:hover {
+  background-color: #2563eb;
+}
+.submitBtn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+@media (max-width: 992px) {
+  .formGrid { grid-template-columns: 1fr; }
+  .periodeSewa { grid-column: auto; }
+  .mediaUploader { grid-template-columns: 1fr; }
+}

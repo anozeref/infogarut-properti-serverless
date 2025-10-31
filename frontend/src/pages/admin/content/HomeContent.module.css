@@ -1,0 +1,166 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  margin-bottom: 16px;
+}
+.header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+.header p {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-color-secondary);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.statCard {
+  background-color: var(--main-bg-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.iconWrapper {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 20px;
+}
+
+.textWrapper h6 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color-secondary);
+}
+.textWrapper p {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.user { background-color: #3b82f6; }
+.properti { background-color: #10b981; }
+.pending { background-color: #f59e0b; }
+.approved { background-color: #8b5cf6; }
+
+.notificationsCard {
+  background-color: var(--main-bg-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+.cardHeader svg {
+  color: #3b82f6;
+}
+.cardHeader h5 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.notifList {
+  padding: 8px 0;
+}
+
+/* === STYLE BARU UNTUK PEMISAH TANGGAL === */
+.notifDateSeparator {
+  padding: 16px 24px 8px 24px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-color-secondary);
+  background-color: var(--main-bg-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.notifRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.notifRow:hover {
+  background-color: #f9fafb;
+}
+[data-theme="dark"] .notifRow:hover {
+  background-color: #2c3a4b;
+}
+.notifTimestamp {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+}
+.notifContent {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.spinnerContainer, .emptyState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px;
+  color: var(--text-color-secondary);
+  font-style: italic;
+}
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #f3f4f6;
+  border-top: 5px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+[data-theme="dark"] .spinner {
+  border: 5px solid #374151;
+  border-top: 5px solid #3b82f6;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 992px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 576px) {
+  .header h2 { font-size: 1.5rem; }
+  .statCard { flex-direction: column; text-align: center; }
+}

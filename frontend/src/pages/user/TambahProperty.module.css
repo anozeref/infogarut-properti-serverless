@@ -1,0 +1,474 @@
+/* 🌿 Container utama */
+.container {
+  max-width: 860px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+/* 🔙 Tombol kembali */
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 28px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.backButton:hover {
+  color: #4f46e5;
+}
+
+.backIcon {
+  width: 18px;
+  height: 18px;
+}
+
+/* 🧩 Card Form */
+.card {
+  background-color: #ffffff;
+  padding: 28px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  transition: all 0.3s ease;
+}
+
+/* 🏷️ Judul */
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 10px;
+}
+
+/* 📋 Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 🔲 Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.colFull {
+  grid-column: span 2;
+}
+
+/* 🧱 Input Group */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* ✏️ Input, Textarea, Select */
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #f9fafb;
+  transition: all 0.2s ease;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  background-color: #ffffff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  outline: none;
+}
+
+/* 🗂️ File Input */
+.fileInput {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f9fafb;
+  cursor: pointer;
+}
+
+.fileInput:hover {
+  background-color: #f1f5f9;
+}
+
+/* 🖼️ Preview Section */
+.previewSection {
+  margin-top: 20px;
+}
+
+.previewTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 10px;
+}
+
+/* 🎞️ Grid untuk preview */
+.previewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+/* 📸 Preview Gambar & Video */
+.previewImage,
+.previewVideo {
+  width: 100%;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.previewImage:hover,
+.previewVideo:hover {
+  transform: scale(1.03);
+}
+
+/* 📄 File Non-media */
+.previewFile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  height: 100px;
+  font-size: 13px;
+  color: #475569;
+  text-align: center;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* ⚙️ Tombol Aksi */
+.actionGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Tombol Batal */
+.cancelBtn {
+  background-color: #f8fafc;
+  color: #475569;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelBtn:hover {
+  background-color: #f1f5f9;
+}
+
+/* Tombol Simpan */
+.submitBtn {
+  background-color: #4f46e5;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.submitBtn:hover {
+  background-color: #6366f1;
+  box-shadow: 0 0 10px rgba(79, 70, 229, 0.4);
+}
+
+/* 🪟 Modal Preview */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modalContent {
+  position: relative;
+  background: #000;
+  padding: 0px;
+  border-radius: 10px;
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: zoomIn 0.25s ease;
+}
+
+.modalImage,
+.modalVideo {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.closeModal {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  line-height: 28px;
+  text-align: center;
+  color: #1e293b;
+  transition: all 0.2s ease;
+}
+
+.closeModal:hover {
+  background: #f87171;
+  color: #fff;
+}
+
+/* 🌙 DARK MODE */
+.dark-mode body,
+.dark-mode .container {
+  background-color: #7390d3 !important;
+  color: #f8fafc !important;
+}
+
+.dark-mode .card {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-mode .title {
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode select {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark-mode input:focus,
+.dark-mode textarea:focus,
+.dark-mode select:focus {
+  background-color: #0f172a !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+}
+
+.dark-mode .label {
+  color: #cbd5e1 !important;
+}
+
+.dark-mode .fileInput {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark-mode .fileInput:hover {
+  background-color: #2d3648 !important;
+}
+
+/* Preview section */
+.dark-mode .previewTitle {
+  color: #cbd5e1 !important;
+}
+
+.dark-mode .previewImage,
+.dark-mode .previewVideo,
+.dark-mode .previewFile {
+  border-color: #334155 !important;
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Tombol */
+.dark-mode .cancelBtn {
+  background-color: #1e293b !important;
+  color: #cbd5e1 !important;
+  border: 1px solid #334155 !important;
+}
+
+.dark-mode .cancelBtn:hover {
+  background-color: #2d3648 !important;
+}
+
+.dark-mode .submitBtn {
+  background-color: #6366f1 !important;
+  color: #fff !important;
+}
+
+.dark-mode .submitBtn:hover {
+  background-color: #7c81ff !important;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+/* 🌙 Tambahan DARK MODE untuk Form Tambah Properti */
+.dark-mode .form-control,
+.dark-mode .form-select {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark-mode .form-control:focus,
+.dark-mode .form-select:focus {
+  background-color: #0f172a !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+  color: #fff !important;
+}
+
+.dark-mode label {
+  color: #cbd5e1 !important;
+}
+
+.dark-mode textarea.form-control {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark-mode input[type="file"] {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark-mode input[type="file"]::file-selector-button {
+  background-color: #334155 !important;
+  color: #e2e8f0 !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 6px 12px !important;
+  margin-right: 8px !important;
+  cursor: pointer !important;
+  transition: background 0.2s ease !important;
+}
+
+.dark-mode input[type="file"]::file-selector-button:hover {
+  background-color: #1f75ec !important;
+}
+
+.dark-mode .btn-primary {
+  background-color: #6366f1 !important;
+  border-color: #6366f1 !important;
+  color: #fff !important;
+  transition: all 0.3s ease;
+}
+
+.dark-mode .btn-primary:hover {
+  background-color: #7c81ff !important;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+.dark-mode .btn-danger {
+  background-color: #dc2626 !important;
+  border-color: #b91c1c !important;
+}
+
+.dark-mode .btn-danger:hover {
+  background-color: #ef4444 !important;
+}
+
+/* Preview media (foto/video) */
+.dark-mode .position-relative {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+}
+
+.dark-mode video {
+  background-color: #0f172a !important;
+}
+
+.dark-mode img {
+  border: 1px solid #334155 !important;
+}
+
+/* Grid form (row/col) */
+.dark-mode .row {
+  color: #f1f5f9 !important;
+}
+
+/* Motion button (Framer Motion) */
+.dark-mode .btn.w-100 {
+  background-color: #6366f1 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+.dark-mode .btn.w-100:hover {
+  background-color: #7c81ff !important;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.6);
+}
+
+/* ✨ Animasi lembut saat muncul */
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 📱 Responsif */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .colFull {
+    grid-column: span 1;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}

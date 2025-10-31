@@ -1,0 +1,111 @@
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  display: flex; /* Tambahkan ini */
+  flex-direction: column; /* Tambahkan ini */
+  height: 100%; /* Pastikan kartu mengisi tinggi grid row */
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+.image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.content {
+  padding: 1.5rem;
+  display: flex; /* Tambahkan ini */
+  flex-direction: column; /* Tambahkan ini */
+  flex-grow: 1; /* Tambahkan ini, agar konten mengisi sisa ruang */
+}
+.location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+.title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  color: var(--text-dark);
+  min-height: 3.9rem;
+  text-align: left;
+}
+.tags {
+  margin-bottom: 1rem;
+}
+.tag {
+  background-color: #e7f1ff;
+  color: var(--secondary-blue);
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 1rem;
+  margin-top: auto; /* INI KUNCINYA: Mendorong blok ini ke bawah */
+  margin-bottom: 1rem;
+}
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #495057;
+}
+.price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+}
+/* Tambahkan di paling atas PropertyCard.module.css */
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* src/components/PropertyCard/PropertyCard.module.css */
+
+/* ... (style .cardLink, .card, .image, .content, .location, .title tetap sama) ... */
+
+/* Modifikasi bagian ini agar tag bisa berdampingan rapi */
+.tags {
+  display: flex;
+  gap: 0.5rem; /* Memberi jarak antar tag */
+  margin-bottom: 1rem;
+}
+
+.tag {
+  background-color: #e7f1ff;
+  color: var(--secondary-blue);
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* TAMBAHKAN STYLE BARU DI BAWAH INI */
+.tagJenis {
+  background-color: #f0f0f0; /* Warna abu-abu muda */
+  color: #555; /* Warna teks abu-abu tua */
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ... (sisa style .details, .detailItem, .price tetap sama) ... */

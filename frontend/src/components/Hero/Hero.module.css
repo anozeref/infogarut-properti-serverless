@@ -1,0 +1,138 @@
+/* src/components/Hero/Hero.module.css */
+
+/**
+ * Gaya dasar untuk pembungkus utama Hero section.
+ * Berlaku untuk semua ukuran layar kecuali ditimpa oleh media query.
+ */
+.hero {
+  height: 500px;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-light);
+  /* Padding default untuk layar besar */
+  padding: 2rem 4rem;
+  /* Tambahkan transisi agar perubahan padding mulus */
+  transition: padding 0.3s ease;
+}
+
+/**
+ * Kontainer untuk konten teks di dalam Hero.
+ */
+.content {
+  padding: 0 1rem;
+  /* max-width: 800px; */ /* Tetap nonaktif jika ingin teks lebar */
+}
+
+/**
+ * Gaya dasar untuk judul utama (<h1>).
+ */
+.title {
+  font-size: 2.75rem; /* Ukuran default */
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 auto 1.5rem auto;
+  /* max-width: 700px; */ /* Tetap nonaktif */
+  /* Tambahkan transisi agar perubahan ukuran font mulus */
+  transition: font-size 0.3s ease;
+}
+
+/**
+ * Gaya dasar untuk teks deskripsi/subtitle (<p>).
+ */
+.subtitle {
+  font-size: 0.9rem; /* Ukuran default */
+  font-weight: 400;
+  line-height: 1.7;
+  margin-bottom: 1.5rem; /* Sedikit tambah jarak bawah */
+  /* max-width: 650px; */ /* Tetap nonaktif */
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0.9;
+  transition: font-size 0.3s ease; /* Transisi untuk ukuran font */
+}
+
+/**
+ * Gaya dasar untuk tombol Call-to-Action (CTA).
+ */
+.ctaButton {
+  background-color: var(--secondary-blue);
+  color: var(--text-light);
+  border: none;
+  padding: 1rem 2.5rem; /* Padding default */
+  border-radius: 8px;
+  font-size: 1.1rem; /* Ukuran font default */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/**
+ * Efek hover untuk tombol CTA.
+ */
+.ctaButton:hover {
+  background-color: #0056b3;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================= */
+/* ==== PENYESUAIAN UNTUK LAYAR TABLET ==== */
+/* ============================================= */
+
+/* Berlaku jika lebar layar MAKSIMAL 992px */
+@media (max-width: 992px) {
+  .hero {
+    /* Kurangi padding horizontal di tablet */
+    padding: 2rem 2rem;
+  }
+
+  .title {
+    /* Perkecil sedikit font judul */
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    /* Sedikit perbesar font subtitle agar lebih terbaca */
+    font-size: 1rem;
+  }
+}
+
+/* ============================================= */
+/* ==== PENYESUAIAN UNTUK LAYAR MOBILE ==== */
+/* ============================================= */
+
+/* Berlaku jika lebar layar MAKSIMAL 600px */
+@media (max-width: 600px) {
+  .hero {
+    /* Kurangi padding lagi di mobile */
+    padding: 2rem 1rem;
+    height: 450px; /* Kurangi tinggi hero di mobile (opsional) */
+  }
+
+  .title {
+    /* Perkecil lagi font judul */
+    font-size: 2rem;
+    line-height: 1.2; /* Rapatkan sedikit jarak baris */
+    margin-bottom: 1rem; /* Kurangi jarak bawah */
+  }
+
+  .subtitle {
+    /* Ukuran font subtitle kembali normal */
+    font-size: 0.9rem;
+    line-height: 1.6; /* Rapatkan sedikit jarak baris */
+    margin-bottom: 1.5rem; /* Jarak ke tombol */
+  }
+
+  .ctaButton {
+    /* Perkecil sedikit tombol di mobile */
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+}

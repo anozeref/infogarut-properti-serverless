@@ -1,0 +1,285 @@
+.card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* 👈 tinggi tetap */
+  width: 100%; /* bisa juga dikunci kalau mau */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ✅ Tambahan: dark mode khusus untuk kartu */
+.card.dark {
+  background-color: #1f2937;
+  color: #f9fafb;
+}
+
+/* 🌙 Warna umum untuk elemen dalam dark mode */
+.dark .card {
+  background-color: #1f2937;
+  color: #f9fafb;
+}
+
+/* === 🖼️ Wrapper gambar === */
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%; /* ✅ biar full dalam card */
+  min-height: 200px; /* jaga agar tidak collapse */
+  max-height: 250px; /* kamu bisa ubah sesuai selera */
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+  background-color: #f3f4f6; /* fallback warna saat gambar belum muncul */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === 📸 Gambar === */
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ✅ isi penuh tanpa distorsi */
+  object-position: center;
+  display: block;
+  border-radius: 16px 16px 0 0;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.imageWrapper:hover .image {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+
+
+/* 📄 Isi Kartu */
+.cardBody {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+/* 🏷️ Badge */
+.badgeGroup {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.badge {
+  background-color: #2563eb;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badgeSecondary {
+  background-color: #6b7280;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.badge.Dark {
+  background-color: #374151 !important;
+}
+
+/* 🏠 Nama Properti */
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0.25rem 0 0.5rem 0;
+}
+
+.dark .cardTitle {
+  color: #f9fafb;
+}
+
+/* 📍 Lokasi */
+.cardLocation {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin: 0.25rem 0;
+  gap: 6px;
+}
+
+.dark .cardLocation {
+  color: #d1d5db;
+}
+
+/* 💰 Harga */
+.cardPrice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #10b981;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+.periode {
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.dark .periode {
+  color: #9ca3af;
+}
+
+/* 📏 Detail Properti */
+.propertyDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #4b5563;
+  margin: 0.5rem 0;
+}
+
+.dark .propertyDetails {
+  color: #d1d5db;
+}
+
+.iconSmall {
+  margin-right: 4px;
+  color: #9ca3af;
+}
+
+/* 📝 Deskripsi */
+.cardDesc {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #374151;
+  margin-bottom: 0.75rem;
+}
+
+.dark .cardDesc {
+  color: #d1d5db;
+}
+
+/* ✏️ Tombol aksi */
+.actionButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: auto;
+}
+
+.editBtn,
+.deleteBtn {
+  border: none;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editBtn {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.editBtn:hover {
+  background-color: #2563eb;
+}
+
+.deleteBtn {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+.deleteBtn:hover {
+  background-color: #dc2626;
+}
+
+/* 🌙 Dark mode tombol */
+.editBtnDark {
+  background-color: #1d4ed8;
+}
+
+.deleteBtnDark {
+  background-color: #991b1b;
+}
+
+/* === PropertiSaya layout (pakai style yang sama) === */
+.cardContainer {
+  padding: 20px;
+  min-height: 100vh;
+  background-color: #f9fafb;
+  color: #111827;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ✅ Fix selector dark mode */
+.cardContainer.dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+/* Judul Halaman */
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* ✅ Grid CardProperty: maksimal 3 kolom, responsif */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  justify-items: center;
+  align-items: stretch;
+}
+
+.gridContainerDitolak {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto; /* tengahin */
+  justify-items: center;
+  align-items: stretch;
+}
+
+/* Responsif untuk ukuran menengah (tablet) */
+@media (max-width: 1024px) {
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Responsif untuk ukuran kecil (HP) */
+@media (max-width: 640px) {
+  .gridContainer {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+}
+

@@ -1,0 +1,229 @@
+/* src/pages/Properti/Properti.module.css */
+
+/* --- Gaya Dasar & Layout Halaman --- */
+
+/**
+ * Gaya untuk tautan "Kembali ke Beranda" di bagian atas halaman.
+ */
+.backLink {
+  display: inline-flex;  /* Agar ikon dan teks sejajar dan bisa diberi gap */
+  align-items: center;  /* Menengahkan ikon dan teks secara vertikal */
+  gap: 0.5rem;          /* Jarak antara ikon panah dan teks */
+  color: var(--secondary-blue); /* Warna teks biru */
+  text-decoration: none; /* Hilangkan garis bawah link */
+  font-weight: 600;       /* Teks sedikit tebal */
+  margin-bottom: 1.5rem;  /* Jarak bawah ke elemen berikutnya (filter section) */
+  transition: color 0.2s ease; /* Transisi halus saat warna berubah */
+}
+
+/**
+ * Efek hover untuk tautan "Kembali".
+ */
+.backLink:hover {
+  color: var(--primary-blue); /* Warna teks menjadi biru tua saat hover */
+}
+
+/**
+ * Kontainer utama untuk seluruh konten halaman Properti.
+ * Membatasi lebar maksimum dan menempatkan konten di tengah.
+ */
+.pageContainer {
+  max-width: 1200px; /* Lebar maksimum konten */
+  margin: 0 auto;   /* Tengah secara horizontal */
+  padding: 2rem;    /* Jarak 2rem di sekeliling konten (default) */
+  transition: padding 0.3s ease; /* Transisi padding */
+}
+
+/* --- Gaya Bagian Filter --- */
+
+/**
+ * Gaya untuk kotak pembungkus area filter.
+ */
+.filterSection {
+  background-color: #f8f9fa; /* Warna latar abu-abu sangat muda */
+  border: 1px solid #e9ecef; /* Garis tepi tipis */
+  padding: 2rem;            /* Jarak internal (default) */
+  border-radius: 12px;     /* Sudut melengkung */
+  margin-bottom: 2rem;      /* Jarak bawah ke bagian hasil */
+  transition: padding 0.3s ease; /* Transisi padding */
+}
+
+/**
+ * Gaya untuk judul di dalam bagian filter (misal: "Temukan Properti...").
+ */
+.title {
+  font-size: 1.8rem;   /* Ukuran font judul (default) */
+  margin-bottom: 1.5rem; /* Jarak bawah ke elemen filter */
+  transition: font-size 0.3s ease; /* Transisi font */
+}
+
+/**
+ * Mengatur tata letak elemen-elemen filter (input lokasi, dropdown, tombol)
+ * agar berjajar secara horizontal menggunakan Flexbox (default).
+ */
+.filters {
+  display: flex;       /* Aktifkan Flexbox */
+  gap: 1rem;           /* Jarak antar elemen filter (default) */
+  align-items: flex-end; /* Sejajarkan elemen filter di bagian bawah */
+  transition: gap 0.3s ease; /* Transisi gap */
+}
+
+/**
+ * Gaya untuk setiap grup filter (label + input/select).
+ */
+.filterGroup {
+  display: flex;           /* Gunakan Flexbox untuk label dan input */
+  flex-direction: column;  /* Susun label di atas input */
+  flex: 1;                 /* Biarkan setiap grup filter mengisi ruang secara merata */
+}
+
+/**
+ * Gaya untuk label di atas setiap input/select filter.
+ */
+.filterGroup label {
+  font-weight: 500;       /* Teks label sedikit tebal */
+  margin-bottom: 0.5rem;  /* Jarak bawah ke input/select */
+  font-size: 0.9rem;      /* Ukuran font label (default) */
+  transition: font-size 0.3s ease; /* Transisi font */
+}
+
+/**
+ * Gaya umum untuk input teks dan dropdown select di dalam filter.
+ */
+.filterGroup input,
+.filterGroup select {
+  padding: 0.75rem;       /* Jarak internal input/select (default) */
+  border: 1px solid #ced4da; /* Garis tepi */
+  border-radius: 8px;      /* Sudut melengkung */
+  font-size: 1rem;         /* Ukuran font di dalam input/select (default) */
+  transition: padding 0.3s ease, font-size 0.3s ease; /* Transisi */
+}
+
+/**
+ * Gaya untuk tombol "Atur Ulang Filter".
+ */
+.filterButton {
+  background-color: var(--primary-blue); /* Warna latar biru tua */
+  color: white;             /* Warna teks putih */
+  border: none;             /* Hapus border default */
+  padding: 0.75rem 1.5rem;  /* Jarak internal tombol (default) */
+  border-radius: 8px;      /* Sudut melengkung */
+  cursor: pointer;          /* Kursor tangan */
+  font-weight: 600;       /* Teks tebal */
+  transition: background-color 0.3s ease, padding 0.3s ease, font-size 0.3s ease, width 0.3s ease; /* Transisi */
+}
+
+/**
+ * Efek hover untuk tombol "Atur Ulang Filter".
+ */
+.filterButton:hover {
+  background-color: #082142; /* Warna latar lebih gelap saat hover */
+}
+
+/* --- Gaya Bagian Hasil Properti --- */
+
+/**
+ * Gaya untuk teks yang menampilkan jumlah properti ditemukan.
+ */
+.resultsCount {
+  font-size: 1.1rem;     /* Ukuran font (default) */
+  color: #6c757d;       /* Warna teks abu-abu */
+  margin-bottom: 1.5rem;  /* Jarak bawah ke grid properti */
+  transition: font-size 0.3s ease; /* Transisi font */
+}
+
+/**
+ * Mengatur layout grid untuk menampilkan kartu-kartu properti.
+ */
+.propertyGrid {
+  display: grid; /* Menggunakan CSS Grid */
+  /* Kolom responsif: minimal 320px, mengisi ruang jika lebih lebar */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;       /* Jarak antar kartu properti (default) */
+  transition: gap 0.3s ease; /* Transisi gap */
+}
+
+/* --- Gaya Status Loading --- */
+
+/**
+ * Gaya untuk pesan yang ditampilkan saat data properti sedang dimuat.
+ */
+.loading {
+  text-align: center; /* Teks rata tengah */
+  padding: 4rem;      /* Beri jarak yang cukup */
+  font-size: 1.5rem;  /* Ukuran font besar */
+  color: var(--primary-blue); /* Warna teks biru tua */
+}
+
+
+/* ============================================= */
+/* ==== PENYESUAIAN RESPONSIVE UNTUK FILTER ==== */
+/* ============================================= */
+
+/* Berlaku jika lebar layar MAKSIMAL 768px (Tablet potret & HP) */
+@media (max-width: 768px) {
+  /**
+   * Ubah tata letak filter menjadi vertikal.
+   */
+  .filters {
+    flex-direction: column; /* Susun elemen filter ke bawah */
+    align-items: stretch; /* Buat setiap elemen filter mengisi lebar penuh */
+    gap: 1.5rem; /* Tambah jarak vertikal antar elemen filter */
+  }
+
+  /**
+   * Pastikan tombol reset filter juga mengisi lebar penuh.
+   */
+  .filterButton {
+    width: 100%; /* Tombol jadi lebar penuh */
+    padding: 0.9rem; /* Sedikit perbesar padding vertikal tombol */
+  }
+
+  /**
+   * Perkecil ukuran grid properti di layar tablet
+   */
+   .propertyGrid {
+       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Kolom sedikit lebih kecil */
+       gap: 1.5rem; /* Jarak antar kartu dikurangi */
+   }
+   .pageContainer {
+       padding: 1.5rem; /* Kurangi padding halaman */
+   }
+   .filterSection {
+       padding: 1.5rem; /* Kurangi padding filter */
+   }
+}
+
+/* Berlaku jika lebar layar MAKSIMAL 480px (HP Kecil) */
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.5rem; /* Perkecil lagi judul filter */
+    }
+    .filters {
+        gap: 1rem; /* Kurangi lagi jarak vertikal filter */
+    }
+    .filterGroup label {
+        font-size: 0.85rem; /* Perkecil font label */
+    }
+    .filterGroup input,
+    .filterGroup select {
+        font-size: 0.9rem; /* Perkecil font input/select */
+        padding: 0.65rem; /* Kurangi padding input/select */
+    }
+    .filterButton {
+        font-size: 0.95rem; /* Perkecil font tombol */
+    }
+    .resultsCount {
+        font-size: 1rem; /* Perkecil font jumlah hasil */
+    }
+    .propertyGrid {
+       grid-template-columns: 1fr; /* Hanya 1 kolom di HP sangat kecil */
+       gap: 1rem;
+   }
+    .pageContainer {
+       padding: 1rem; /* Kurangi lagi padding halaman */
+   }
+   .filterSection {
+       padding: 1rem; /* Kurangi lagi padding filter */
+   }
+}

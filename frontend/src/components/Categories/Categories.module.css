@@ -1,0 +1,138 @@
+/* src/components/Categories/Categories.module.css */
+
+/* --- Gaya Dasar (Default untuk semua ukuran layar) --- */
+
+/* Gaya untuk elemen <section> pembungkus utama */
+.categoriesSection {
+  padding: 4rem 0; /* Jarak atas/bawah */
+  background-color: var(--background-light); /* Warna latar putih */
+}
+
+/* Kontainer untuk membatasi lebar konten dan menengahkan */
+.container {
+  max-width: 1200px; /* Lebar maksimum */
+  margin: 0 auto; /* Tengah secara horizontal */
+  padding: 0 2rem; /* Jarak kiri/kanan */
+  text-align: center; /* Teks di dalamnya rata tengah */
+}
+
+/* Gaya judul utama bagian */
+.title {
+  font-size: 2.5rem; /* Ukuran font */
+  margin-bottom: 0.5rem; /* Jarak bawah */
+}
+
+/* Gaya subjudul di bawah judul utama */
+.subtitle {
+  font-size: 1.1rem; /* Ukuran font */
+  color: #6c757d; /* Warna teks abu-abu */
+  margin-bottom: 3rem; /* Jarak bawah ke grid */
+}
+
+/* Layout Grid untuk kartu-kartu kategori */
+.grid {
+  display: grid; /* Menggunakan CSS Grid */
+  /* Membuat kolom responsif: minimal 250px, mengisi ruang jika lebih lebar */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem; /* Jarak antar kartu */
+}
+
+/* Menghilangkan gaya default link pada pembungkus kartu */
+.cardLink {
+  text-decoration: none; /* Hapus garis bawah */
+  color: inherit; /* Warna teks sama seperti induk */
+}
+
+/* Gaya untuk setiap kartu kategori */
+.card {
+  background-color: var(--background-light); /* Warna latar kartu */
+  padding: 2rem; /* Jarak internal */
+  border-radius: 12px; /* Sudut melengkung */
+  border: 1px solid #e9ecef; /* Garis tepi */
+  text-align: center; /* Teks rata tengah */
+  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Transisi hover */
+  cursor: pointer; /* Kursor tangan */
+  height: 100%; /* Tinggi kartu sama rata */
+}
+
+/* Efek saat mouse di atas kartu */
+.card:hover {
+  transform: translateY(-5px); /* Angkat kartu sedikit */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Bayangan lebih jelas */
+}
+
+/* Gaya untuk ikon di dalam kartu */
+.icon {
+  color: var(--secondary-blue); /* Warna ikon */
+  margin-bottom: 1rem; /* Jarak bawah ke judul kartu */
+}
+
+/* Gaya untuk judul di dalam kartu */
+.cardTitle {
+  font-size: 1.5rem; /* Ukuran font */
+  margin: 0 0 0.5rem 0; /* Jarak bawah */
+}
+
+/* Gaya untuk deskripsi di dalam kartu */
+.cardDescription {
+  color: #6c757d; /* Warna teks abu-abu */
+  line-height: 1.6; /* Jarak antar baris */
+}
+
+/* --- Penyesuaian Responsif --- */
+
+/* Aturan untuk layar dengan lebar maksimal 768px (Tablet & HP) */
+@media (max-width: 768px) {
+  /* Kurangi jarak atas/bawah section */
+  .categoriesSection {
+    padding: 3rem 0;
+  }
+
+  /* Kurangi jarak kiri/kanan kontainer */
+  .container {
+    padding: 0 1rem;
+  }
+
+  /* Perkecil font judul utama */
+  .title {
+    font-size: 2rem;
+  }
+
+  /* Kurangi jarak bawah subtitle */
+  .subtitle {
+    margin-bottom: 2rem;
+  }
+
+  /* Kurangi jarak antar kartu */
+  .grid {
+    gap: 1.5rem;
+  }
+
+  /* Kurangi jarak internal kartu */
+  .card {
+    padding: 1.5rem;
+  }
+
+  /* Perkecil font judul kartu */
+  .cardTitle {
+    font-size: 1.3rem;
+  }
+}
+
+/* Aturan untuk layar dengan lebar maksimal 480px (HP Kecil) */
+@media (max-width: 480px) {
+  /* Perkecil lagi font judul utama */
+  .title {
+    font-size: 1.8rem;
+  }
+
+  /* Perkecil lagi font judul kartu */
+  .cardTitle {
+    font-size: 1.2rem;
+  }
+
+  /* Perkecil font deskripsi kartu */
+  .cardDescription {
+    font-size: 0.9rem;
+  }
+}

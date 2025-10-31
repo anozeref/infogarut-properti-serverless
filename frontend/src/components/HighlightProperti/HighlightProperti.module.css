@@ -1,0 +1,207 @@
+/* src/components/HighlightProperti/HighlightProperti.module.css */
+
+/* --- Gaya Dasar (Default) --- */
+.highlightSection {
+  padding: 3rem 1rem; /* Padding horizontal default */
+  background-color: var(--background-light); /* Warna putih */
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.2rem;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+  transition: font-size 0.3s ease;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #6c757d;
+  max-width: 600px;
+  margin: 0 auto 2.5rem auto;
+  line-height: 1.6;
+  transition: font-size 0.3s ease;
+}
+
+/* Jarak antar slide */
+.slideItem {
+  padding: 0 15px; /* Padding kiri/kanan slide */
+  box-sizing: border-box; /* Pastikan padding tidak menambah lebar */
+}
+
+/* Link pembungkus kartu */
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Kartu properti */
+.card {
+  background-color: var(--background-light);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%; /* Jaga tinggi konsisten */
+  border: 1px solid #eee;
+  display: flex; /* Gunakan flex untuk memastikan konten mengisi tinggi */
+  flex-direction: column; /* Konten tersusun vertikal */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* Gambar kartu */
+.cardImage {
+  width: 100%;
+  height: 180px; /* Tinggi gambar default */
+  object-fit: cover;
+}
+
+/* Konten teks kartu */
+.cardContent {
+  padding: 1rem 1.25rem; /* Padding default */
+  text-align: left;
+  flex-grow: 1; /* Biarkan konten mengisi sisa ruang vertikal */
+  display: flex; /* Gunakan flex untuk mengatur elemen di dalamnya */
+  flex-direction: column; /* Susun vertikal */
+}
+
+/* Judul kartu */
+.cardTitle {
+  font-size: 1.2rem; /* Ukuran default */
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-dark);
+}
+
+/* Lokasi kartu */
+.cardLocation {
+  font-size: 0.9rem; /* Ukuran default */
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Harga kartu */
+.cardPrice {
+  font-size: 1.3rem; /* Ukuran default */
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin: 0;
+  margin-top: auto; /* Dorong harga ke bagian bawah cardContent */
+}
+
+/* Pesan jika tidak ada properti */
+.noPropertiesMessage {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 2rem 0;
+}
+
+/* ============================================= */
+/* ==== PENYESUAIAN RESPONSIVE ==== */
+/* ============================================= */
+
+/* --- Tablet (<= 992px) --- */
+@media (max-width: 992px) {
+  .title {
+    font-size: 2rem;
+  }
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+  .slideItem {
+    padding: 0 10px;
+  }
+}
+
+/* --- Mobile (<= 600px) --- */
+@media (max-width: 600px) {
+  .highlightSection {
+    padding: 2rem 0.5rem;
+  }
+  .title {
+    font-size: 1.8rem;
+  }
+  .subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  .slideItem {
+    padding: 0 5px;
+  }
+  .cardImage {
+    height: 160px;
+  }
+  .cardContent {
+    padding: 0.8rem 1rem;
+  }
+  .cardTitle {
+    font-size: 1rem;
+    white-space: normal; /* Izinkan judul wrap di mobile */
+    overflow: visible;
+    text-overflow: clip;
+  }
+  .cardLocation {
+    font-size: 0.8rem;
+  }
+  .cardPrice {
+    font-size: 1.1rem;
+  }
+  /* Sembunyikan panah di mobile */
+  :global(.slick-prev),
+  :global(.slick-next) {
+    display: none !important;
+  }
+}
+
+/* --- Styling react-slick (Dots & Arrows) --- */
+:global(.slick-dots) {
+  bottom: -15px !important;
+}
+:global(.slick-dots li button:before) {
+  font-size: 10px;
+  color: var(--primary-blue) !important;
+  opacity: 0.5;
+}
+:global(.slick-dots li.slick-active button:before) {
+  opacity: 1;
+}
+
+:global(.slick-prev),
+:global(.slick-next) {
+  z-index: 10;
+}
+:global(.slick-prev:before),
+:global(.slick-next:before) {
+  font-size: 25px;
+  color: var(--primary-blue) !important;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+:global(.slick-prev:hover:before),
+:global(.slick-next:hover:before) {
+  opacity: 1;
+}
+:global(.slick-prev) {
+  left: -10px !important;
+}
+:global(.slick-next) {
+  right: -10px !important;
+}

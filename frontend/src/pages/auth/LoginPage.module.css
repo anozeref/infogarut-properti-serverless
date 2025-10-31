@@ -1,0 +1,157 @@
+/* LoginPage.module.css */
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  position: relative;
+  overflow: hidden; /* Mencegah lingkaran besar membuat scrollbar */
+  font-family: 'Poppins', sans-serif; /* Ganti dengan font yang Anda gunakan */
+}
+
+/* Lingkaran Dekoratif */
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.circleOne {
+  width: 450px;
+  height: 450px;
+  background: linear-gradient(to right, #18d2af, #84fab0);
+  top: 10%;
+  right: -150px;
+}
+
+.circleTwo {
+  width: 600px;
+  height: 600px;
+  background: linear-gradient(to right, #a984fa, #6c63ff);
+  bottom: -200px;
+  left: -200px;
+}
+
+.circleThree {
+  width: 30px;
+  height: 30px;
+  background-color: #18d2af;
+  bottom: 40%;
+  left: 15%;
+}
+
+.circleFour {
+  width: 20px;
+  height: 20px;
+  background-color: #6c63ff;
+  top: 25%;
+  right: 20%;
+}
+
+
+/* Kotak Login Utama */
+.loginBox {
+  background-color: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  z-index: 10; /* Memastikan kotak login di atas lingkaran */
+  border: 1px solid #eee;
+}
+
+.iconWrapper {
+  color: #18d2af; /* Warna ikon seperti di gambar */
+  margin-bottom: 20px;
+}
+
+.title {
+  margin-bottom: 25px;
+  font-size: 2.2rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.inputGroup {
+  margin-bottom: 15px;
+}
+
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Penting untuk padding dan width 100% */
+  transition: border-color 0.3s;
+}
+
+.input::placeholder {
+  color: #aaa;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #6c63ff;
+}
+
+.button {
+  width: 100%;
+  padding: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.registerLink {
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.registerLink a {
+  color: #007bff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.registerLink a:hover {
+  text-decoration: underline;
+}
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.adminBtn {
+  background-color: #6c63ff; /* warna ungu sesuai tema */
+}
+
+.adminBtn:hover {
+  background-color: #5548d8;
+}
+
+.userBtn {
+  background-color: #18d2af; /* warna toska sesuai circleOne */
+}
+
+.userBtn:hover {
+  background-color: #12b293;
+}

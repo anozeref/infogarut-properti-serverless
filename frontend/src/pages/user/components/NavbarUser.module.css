@@ -1,0 +1,407 @@
+/* ===================== */
+/* 🌐 NAVBAR DASAR */
+/* ===================== */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  color: #111827;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background 0.3s ease, color 0.3s ease, border 0.3s ease;
+  z-index: 50;
+}
+
+/* 🌙 DARK MODE */
+.dark {
+  background: #1f2937;
+  color: #f9fafb;
+  border-bottom: 1px solid #374151;
+}
+
+/* ===================== */
+/* 🔷 LOGO */
+/* ===================== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+}
+
+/* ===================== */
+/* 🌍 LINK KE LANDING PAGE */
+/* ===================== */
+.landingLink {
+  margin-left: auto;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.landingBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #6366f1;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.landingBtn:hover {
+  background: #4f46e5;
+  transform: translateX(3px);
+}
+
+/* 🌙 DARK MODE LANDING BUTTON */
+.dark .landingBtn {
+  background: #374151;
+  color: #f9fafb;
+}
+
+.dark .landingBtn:hover {
+  background: #6366f1;
+  color: #fff;
+}
+
+/* ===================== */
+/* 🔔 NOTIFIKASI */
+/* ===================== */
+.navbarRight {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.notif {
+  position: relative;
+}
+
+.notifBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.notifBtn:hover {
+  transform: scale(1.1);
+  color: #6366f1;
+}
+
+/* BADGE NOTIFIKASI (Bulatan Merah) */
+.notifBadge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background-color: #ef4444; /* Merah */
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff; /* Border putih */
+}
+
+.dark .notifBadge {
+  border-color: #1f2937; /* Border warna background dark */
+}
+
+
+/* BOX NOTIF */
+.notifBox {
+  position: absolute;
+  right: 0;
+  top: 38px;
+  background: #ffffff;
+  color: #111827;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 0; /* Padding diatur di header & item */
+  font-size: 14px;
+  width: 300px; /* Sedikit lebih lebar */
+  animation: fadeIn 0.25s ease;
+  z-index: 100;
+  overflow: hidden; /* Agar border-radius rapi */
+}
+
+/* HEADER NOTIF (Judul + Tombol Clear) */
+.notifHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb; /* Latar header sedikit beda */
+}
+
+.notifHeader strong {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* TOMBOL CLEAR (FaCheckDouble) */
+.clearNotifBtn {
+  background: none;
+  border: none;
+  color: #9ca3af; /* Abu-abu netral */
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.clearNotifBtn:hover {
+  color: #4f46e5; /* Warna utama */
+  background-color: #eef2ff; /* Latar hover */
+}
+
+/* ITEM NOTIFIKASI (MENGGANTIKAN .notifBox p) */
+.notifItem {
+  margin: 0;
+  padding: 10px 12px;
+  border-bottom: 1px solid #f3f4f6; /* Garis pemisah tipis */
+  font-size: 13px;
+  line-height: 1.4;
+  transition: background 0.2s ease;
+}
+
+.notifItem:last-child {
+  border-bottom: none; /* Hapus border di item terakhir */
+}
+
+.notifItem small {
+  font-size: 11px;
+  color: #6b7280; /* Warna abu-abu untuk waktu */
+}
+
+/* Style jika notif bisa diklik */
+.notifLink {
+  cursor: pointer;
+}
+.notifLink:hover {
+  background-color: #f9fafb;
+}
+
+/* Style jika notif SUDAH DIBACA */
+.notifRead {
+  opacity: 0.6; /* Redup */
+  color: #6b7280;
+}
+.notifRead:hover {
+  opacity: 1;
+  color: #111827;
+  background-color: #f3f4f6;
+}
+
+/* Style jika tidak ada notif */
+.emptyNotif {
+  padding: 20px 12px;
+  color: #6b7280;
+  font-style: italic;
+  text-align: center;
+  font-size: 13px;
+  margin: 0;
+}
+
+
+/* 🌙 DARK MODE NOTIF (LENGKAP) */
+.dark .notifBox {
+  background: #1f2937; /* Background box dark */
+  color: #f9fafb;
+  border: 1px solid #374151;
+}
+
+.dark .notifHeader {
+  background-color: #374151; /* Latar header dark */
+  border-bottom: 1px solid #4b5563;
+}
+
+.dark .clearNotifBtn {
+  color: #9ca3af;
+}
+
+.dark .clearNotifBtn:hover {
+  color: #c7d2fe; /* Warna utama (terang) */
+  background-color: #4b5563;
+}
+
+.dark .notifItem {
+  border-bottom: 1px solid #374151; /* Garis pemisah dark */
+}
+
+.dark .notifItem small {
+  color: #9ca3af;
+}
+
+.dark .notifLink:hover {
+  background-color: #374151;
+}
+
+.dark .notifRead {
+  opacity: 0.5;
+  color: #9ca3af;
+}
+.dark .notifRead:hover {
+  opacity: 1;
+  color: #f9fafb;
+  background-color: #374151;
+}
+
+.dark .emptyNotif {
+  color: #9ca3af;
+}
+
+
+/* ===================== */
+/* 👤 PROFILE DROPDOWN */
+/* ===================== */
+.userLogo {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+.profileBox {
+  position: absolute;
+  right: 0;
+  top: 38px;
+  background: #ffffff;
+  color: #111827;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 14px;
+  width: 220px;
+  animation: fadeIn 0.25s ease;
+  z-index: 100;
+}
+
+/* 🌙 DARK MODE PROFILE BOX */
+.dark .profileBox {
+  background: #1f2937; /* Background box dark */
+  color: #f9fafb;
+  border: 1px solid #374151;
+}
+
+/* ===================== */
+/* ⚙️ LINK & LOGOUT STYLE */
+/* ===================== */
+.settingBtn,
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-weight: 500;
+  font-size: 14px;
+  color: inherit;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+}
+
+.settingBtn:hover,
+.logoutBtn:hover {
+  background-color: #f3f4f6;
+  color: #4f46e5;
+}
+
+/* 🌙 DARK MODE BUTTON */
+.dark .settingBtn:hover,
+.dark .logoutBtn:hover {
+  background-color: #3b3b3b;
+  color: #6366f1;
+}
+
+/* ===================== */
+/* 🌗 TOMBOL MODE TEMA */
+/* ===================== */
+.themeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: inherit;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.themeBtn:hover {
+  transform: rotate(25deg);
+  color: #6366f1;
+}
+
+/* 🌙 DARK MODE TOMBOL TEMA */
+.dark .themeBtn {
+  color: #f9fafb;
+}
+
+/* ===================== */
+/* 📱 RESPONSIVE */
+/* ===================== */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  .navbarRight {
+    gap: 12px;
+  }
+
+  .logo img {
+    height: 32px;
+  }
+
+  .notifBox,
+  .profileBox {
+    width: 240px; /* Sedikit lebih lebar untuk notif */
+  }
+
+  .landingBtn {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
+
+/* ===================== */
+/* ✨ ANIMASI */
+/* ===================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

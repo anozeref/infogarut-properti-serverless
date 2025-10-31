@@ -1,0 +1,275 @@
+/* 🌿 Container utama dashboard */
+.dashboardContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9fafb;
+  color: #111827;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+/* 🌙 Dark mode */
+.dashboardContainer.dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+/* 🧭 Layout utama (Sidebar + Konten) */
+.mainContent {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  gap: 2rem;
+  padding: 0 1.5rem;
+}
+
+/* 🧩 Area isi utama */
+.contentArea {
+  flex: 1;
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+}
+
+/* 🏷️ Judul sapaan */
+.greetingTitle {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.greetingSubtitle {
+  font-size: 1rem;
+  color: #4b5563;
+  margin-bottom: 16px;
+}
+
+.dark .greetingSubtitle {
+  color: #d1d5db;
+}
+
+/* 📦 Section konten */
+.section {
+  margin-top: 10px;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1f2937;
+}
+
+.dark .sectionTitle {
+  color: #f3f4f6;
+}
+
+/* 🏡 Grid layout properti (seragam di semua halaman) */
+.propertyGrid,
+.gridContainer,
+.gridContainerDitolak {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  width: 100%;
+  max-width: 1100px;
+  justify-items: stretch;
+  align-items: stretch;
+  gap: 1.5rem;
+  padding: 0 10px;
+}
+
+/* === 🧩 CARD PROPERTY === */
+.card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* ✅ biar isi fleksibel dan tinggi seragam */
+  min-height: 380px; /* ✅ tinggi minimum biar sejajar */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card.dark {
+  background-color: #1f2937;
+  color: #f9fafb;
+}
+
+/* === 🖼️ Wrapper gambar === */
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.imageWrapper:hover .image {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+/* 📄 Isi Kartu */
+.cardBody {
+  flex: 1; /* ✅ isi fleksibel */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+}
+
+/* 🏠 Judul Properti */
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0.25rem 0 0.5rem 0;
+}
+
+.dark .cardTitle {
+  color: #f9fafb;
+}
+
+/* 📍 Lokasi & Detail */
+.cardLocation,
+.propertyDetails {
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin: 0.25rem 0;
+}
+
+.dark .cardLocation,
+.dark .propertyDetails {
+  color: #d1d5db;
+}
+
+/* 💰 Harga */
+.cardPrice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #10b981;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+.periode {
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.dark .periode {
+  color: #9ca3af;
+}
+
+/* 📝 Deskripsi */
+.cardDesc {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #374151;
+  margin-bottom: 0.75rem;
+}
+
+.dark .cardDesc {
+  color: #d1d5db;
+}
+
+/* ✏️ Tombol aksi */
+.actionButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: auto; /* ✅ dorong ke bawah biar sejajar */
+}
+
+.editBtn,
+.deleteBtn {
+  border: none;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editBtn {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.editBtn:hover {
+  background-color: #2563eb;
+}
+
+.deleteBtn {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+.deleteBtn:hover {
+  background-color: #dc2626;
+}
+
+/* 🌙 Tombol mode dark */
+.editBtnDark {
+  background-color: #1d4ed8;
+}
+
+.deleteBtnDark {
+  background-color: #991b1b;
+}
+
+/* 📱 Responsif */
+@media (max-width: 1024px) {
+  .propertyGrid,
+  .gridContainer,
+  .gridContainerDitolak {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .contentArea {
+    padding: 28px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .propertyGrid,
+  .gridContainer,
+  .gridContainerDitolak {
+    grid-template-columns: 1fr;
+  }
+
+  .contentArea {
+    padding: 20px;
+  }
+}
+
+
+.darkMode {
+  background-color: #111828;
+  color: #e5e5e5;
+}

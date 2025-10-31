@@ -1,0 +1,16 @@
+/* src/components/Footer/Footer.module.css */
+.footer {
+  background-color: var(--primary-blue);
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.footer p {
+  margin: 0.25rem 0;
+}
+
+.subtext {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
+}

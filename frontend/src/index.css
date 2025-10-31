@@ -1,0 +1,27 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* src/index.css */
+:root {
+  --primary-blue: #0A2C5A;
+  --primary-blue-light: #1C3D6D; /* <-- TAMBAHKAN WARNA BARU DI SINI */
+  --secondary-blue: #007BFF;
+  --background-light: #FFFFFF;
+  --background-grey: #F8F9FA;
+  --text-dark: #212529;
+  --text-light: #FFFFFF;
+}
+body {
+  margin: 0;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-light);
+  color: var(--text-dark);
+}
+
+* {
+  box-sizing: border-box;
+}
