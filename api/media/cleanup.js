@@ -3,6 +3,11 @@ import { list, del } from '@vercel/blob';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase environment variables: SUPABASE_URL or SUPABASE_ANON_KEY');
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
@@ -33,7 +38,8 @@ export default async function handler(req, res) {
 
       res.status(200).json({ message: `${deletedCount} file tidak terpakai telah dihapus.` });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.error('Supabase connection or blob operation error in media cleanup:', error.message);
+      res.status(500).json({ error: 'Database or blob operation failed' });
     }
   } else {
     res.setHeader('Allow', ['POST']);

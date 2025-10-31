@@ -2,6 +2,11 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase environment variables: SUPABASE_URL or SUPABASE_ANON_KEY');
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
@@ -27,7 +32,8 @@ export default async function handler(req, res) {
         res.status(200).json(data);
       }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.error('Supabase connection or query error in users GET:', error.message);
+      res.status(500).json({ error: 'Database connection failed' });
     }
   } else if (req.method === 'POST') {
     try {
@@ -35,7 +41,8 @@ export default async function handler(req, res) {
       if (error) throw error;
       res.status(201).json(data[0]);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.error('Supabase connection or query error in users POST:', error.message);
+      res.status(500).json({ error: 'Database connection failed' });
     }
   } else if (req.method === 'PATCH') {
     try {
@@ -44,7 +51,8 @@ export default async function handler(req, res) {
       if (error) throw error;
       res.status(200).json(data[0]);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.error('Supabase connection or query error in users PATCH:', error.message);
+      res.status(500).json({ error: 'Database connection failed' });
     }
   } else {
     res.setHeader('Allow', ['GET', 'POST', 'PATCH']);

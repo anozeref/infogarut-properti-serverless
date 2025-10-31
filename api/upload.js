@@ -3,6 +3,11 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase environment variables: SUPABASE_URL or SUPABASE_ANON_KEY');
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
@@ -21,7 +26,8 @@ export default async function handler(req, res) {
 
       res.status(200).json({ files: uploadedUrls });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.error('Upload or Supabase connection error in upload:', error.message);
+      res.status(500).json({ error: 'Upload or database connection failed' });
     }
   } else {
     res.setHeader('Allow', ['POST']);
