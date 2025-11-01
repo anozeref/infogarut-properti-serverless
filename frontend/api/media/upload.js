@@ -62,6 +62,25 @@ export default async function handler(req, res) {
     }
 
     const bucket = "media";
+
+    // Ensure bucket exists and is public; create if missing
+    try {
+      const { data: bucketsList } = await supabase.storage.listBuckets();
+      const exists = Array.isArray(bucketsList) && bucketsList.some((b) => b.name === bucket);
+      if (!exists) {
+        const { error: bucketErr } = await supabase.storage.createBucket(bucket, {
+          public: true,
+        });
+        if (bucketErr) {
+          console.error("Failed to create Supabase bucket 'media':", bucketErr);
+          return res.status(400).json({ error: bucketErr.message || "Bucket creation failed" });
+        }
+      }
+    } catch (e) {
+      console.error("Bucket verify/create error", e);
+      // proceed; upload will fail later if bucket truly unavailable
+    }
+
     const safePrefix = pathPrefix
       ? String(pathPrefix).replace(/^\/*|\/*$/g, "")
       : "";
