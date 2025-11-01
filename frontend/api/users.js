@@ -72,21 +72,37 @@ export default async function handler(req, res) {
         return res.status(200).json(rows ?? []);
       }
 
-      // Default
-      return res.status(200).json([]);
+      // Default: GET list of users
+      const { data: rows, error } = await supabase
+        .from("users")
+        .select("*");
+      if (error) {
+        console.error("Users list GET error");
+        return res.status(400).json({ error: error.message || "Query error" });
+      }
+      return res.status(200).json(rows ?? []);
     }
 
     // POST: create user
     if (req.method === "POST") {
-      const { username: u, email: m, password: p } = req.body ?? {};
-      if (!u || !m || !p) {
+      const body = req.body ?? {};
+      const { username, email, password } = body;
+      if (!username || !email || !password) {
         return res.status(400).json({ error: "Missing required fields: username, email, password" });
       }
+
+      // Accept extended profile fields from client; set defaults
+      const payload = {
+        ...body,
+        created_at: new Date().toISOString(),
+        joinedAt: body.joinedAt || body.created_at || new Date().toISOString(),
+        role: body.role || "user",
+      };
 
       try {
         const { data: created, error } = await supabase
           .from("users")
-          .insert([{ username: u, email: m, password: p, created_at: new Date().toISOString() }])
+          .insert([payload])
           .select()
           .single();
 
@@ -165,8 +181,38 @@ export default async function handler(req, res) {
       return res.status(200).json(updated);
     }
 
+    // PUT: update user (alias of PATCH for compatibility)
+    if (req.method === "PUT") {
+      if (!id) {
+        return res.status(400).json({ error: "Missing user id" });
+      }
+      const patch = req.body || {};
+      if (Object.prototype.hasOwnProperty.call(patch, "id")) {
+        delete patch.id;
+      }
+      if (!patch || Object.keys(patch).length === 0) {
+        return res.status(400).json({ error: "No fields to update" });
+      }
+
+      const { data: updated, error: updateErr } = await supabase
+        .from("users")
+        .update(patch)
+        .eq("id", String(id))
+        .select()
+        .single();
+
+      if (updateErr) {
+        if ((updateErr.message || "").match(/PGRST116|Row not found/i)) {
+          return res.status(404).json({ error: "User tidak ditemukan" });
+        }
+        return res.status(400).json({ error: updateErr.message || "Failed to update user" });
+      }
+
+      return res.status(200).json(updated);
+    }
+
     // Method not allowed
-    res.setHeader("Allow", ["GET", "POST", "PATCH"]);
+    res.setHeader("Allow", ["GET", "POST", "PATCH", "PUT"]);
     return res.status(405).json({ error: "Method Not Allowed" });
   } catch (e) {
     console.error("Users route error");
