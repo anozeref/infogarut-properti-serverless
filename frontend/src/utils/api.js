@@ -1,8 +1,8 @@
-import { API_URL } from "./constant";
+import { API_BASE, UPLOAD_ENDPOINT, USERS_ENDPOINT, PROPERTIES_ENDPOINT, NOTIFICATIONS_ENDPOINT, BANNED_USERS_ENDPOINT, MEDIA_CLEANUP_ENDPOINT, ADMIN_PROPERTY_STATUS_ENDPOINT } from "./constant";
 
 export const loginUser = async (username, password) => {
   try {
-    const res = await fetch(`${API_URL}users?username=${username}&password=${password}`);
+    const res = await fetch(`${USERS_ENDPOINT}?username=${username}&password=${password}`);
     if (!res.ok) throw new Error("Gagal menghubungi server");
 
     const data = await res.json();
@@ -20,17 +20,17 @@ export const loginUser = async (username, password) => {
 export const registerUser = async (userData) => {
   try {
     // Cek username sudah ada atau belum
-    const usernameRes = await fetch(`${API_URL}users?username=${userData.username}`);
+    const usernameRes = await fetch(`${USERS_ENDPOINT}?username=${userData.username}`);
     const usernameExist = await usernameRes.json();
     if (usernameExist.length) throw new Error("Username sudah digunakan");
 
     // Cek email sudah ada atau belum
-    const emailRes = await fetch(`${API_URL}users?email=${userData.email}`);
+    const emailRes = await fetch(`${USERS_ENDPOINT}?email=${userData.email}`);
     const emailExist = await emailRes.json();
     if (emailExist.length) throw new Error("Email sudah digunakan");
 
     // Simpan user baru ke db.json
-    const res = await fetch(`${API_URL}users`, {
+    const res = await fetch(`${USERS_ENDPOINT}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
