@@ -11,7 +11,6 @@ import { IoLocationOutline, IoArrowBack } from "react-icons/io5";
 import { LuBedDouble, LuBath } from "react-icons/lu";
 import { RxRulerSquare } from "react-icons/rx";
 import { FaInstagram } from "react-icons/fa"; // Pastikan ikon Instagram diimpor
-import { API_URL } from "../../utils/constant";
 
 /**
  * Komponen Halaman `PropertiDetail`:
@@ -37,8 +36,8 @@ const PropertiDetail = () => {
     // useEffect Hook untuk mengambil data detail properti saat komponen dimuat atau saat `id` berubah.
     useEffect(() => {
         setLoading(true); // Mulai status loading
-        // Mengambil data dari serverless API untuk properti dengan ID spesifik
-        fetch(`${API_URL}properties?id=${id}`)
+        // Mengambil data dari json-server (port 3004) untuk properti dengan ID spesifik
+        fetch(`http://localhost:3004/properties/${id}`)
             .then(res => {
                 // Jika response tidak OK (misal: 404 Not Found), lempar error
                 if (!res.ok) {
@@ -50,8 +49,8 @@ const PropertiDetail = () => {
                 setProperty(data); // Simpan data properti ke state
                 // Set gambar aktif awal: cek jika data ada, punya media, dan media tidak kosong
                 if (data && data.media && data.media.length > 0) {
-                    // Media sudah berupa full URL dari Vercel Blob
-                    setActiveImage(data.media[0]);
+                    // Buat URL lengkap ke server backend (port 3005) yang menyajikan gambar
+                    setActiveImage(`http://localhost:3005/media/${data.media[0]}`);
                 } else {
                     // Jika tidak ada gambar, set ke string kosong atau URL placeholder
                     setActiveImage(''); // Atau gambar placeholder: 'https://via.placeholder.com/800x600.png?text=No+Image'
@@ -69,8 +68,8 @@ const PropertiDetail = () => {
      * @param {string} imageName - Nama file gambar yang diklik.
      */
     const handleThumbnailClick = (imageName) => {
-        // Media sudah berupa full URL dari Vercel Blob
-        setActiveImage(imageName);
+        // Buat URL lengkap ke server backend (port 3005) untuk gambar yang diklik
+        setActiveImage(`http://localhost:3005/media/${imageName}`);
     };
 
     /**
@@ -131,11 +130,11 @@ const PropertiDetail = () => {
                     {property.media && Array.isArray(property.media) && property.media.map((imgName, index) => (
                         <img
                             key={index} // Key unik untuk setiap elemen map
-                            src={imgName} // Media sudah berupa full URL dari Vercel Blob
+                            src={`http://localhost:3005/media/${imgName}`} // URL lengkap ke gambar thumbnail
                             alt={`Thumbnail ${index + 1}`} // Teks alternatif
                             onClick={() => handleThumbnailClick(imgName)} // Panggil fungsi saat diklik
                             // Tambahkan class 'activeThumbnail' jika URL thumbnail = URL gambar aktif
-                            className={activeImage === imgName ? styles.activeThumbnail : ''}
+                            className={activeImage === `http://localhost:3005/media/${imgName}` ? styles.activeThumbnail : ''}
                         />
                     ))}
                 </div>

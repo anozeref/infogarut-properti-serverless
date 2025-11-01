@@ -6,7 +6,6 @@ import Swal from "sweetalert2";
 import { AuthContext } from "../../context/AuthContext";
 import { useOutletContext } from "react-router-dom";
 import styles from "./components/CardProperty.module.css";
-import { API_URL } from "../../utils/constant";
 
 export default function PropertiPending() {
   const { darkMode } = useOutletContext();
@@ -28,7 +27,7 @@ export default function PropertiPending() {
 
     const fetchPendingProperties = async () => {
       try {
-        const res = await axios.get(`${API_URL}properties`);
+        const res = await axios.get("http://localhost:3004/properties");
 
         // 🔍 Filter: hanya properti user ini yg masih pending
         const filtered = res.data
@@ -72,7 +71,7 @@ export default function PropertiPending() {
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        const res = await axios.delete(`${API_URL}properties?id=${id}`);
+        const res = await axios.delete(`http://localhost:3004/properties/${id}`);
 
         // json-server kadang return 200 atau 204 → dua-duanya dianggap sukses
         if (res.status === 200 || res.status === 204) {

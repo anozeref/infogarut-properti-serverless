@@ -40,7 +40,7 @@ const PropertyCard = ({ property }) => {
   // ke server backend (port 3005) yang menyajikan gambar dari folder /media.
   // Jika tidak ada gambar, gunakan URL gambar placeholder.
   const mainImage = property.media && property.media.length > 0
-    ? property.media[0]
+    ? `http://localhost:3005/media/${property.media[0]}`
     : 'https://via.placeholder.com/400x300.png?text=No+Image';
 
   // Render JSX untuk komponen PropertyCard

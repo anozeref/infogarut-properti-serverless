@@ -38,9 +38,10 @@ const HighlightCard = ({ property }) => {
 
     // Logika menentukan URL gambar:
     // Cek apakah `property.media` ada dan berisi setidaknya satu gambar.
-    // Media sudah berupa full URL dari Vercel Blob.
+    // Jika ya, buat URL lengkap ke server backend (`localhost:3005/media/namafile`).
+    // Jika tidak, gunakan URL gambar placeholder.
     const image = property.media && property.media.length > 0
-        ? property.media[0]
+        ? `http://localhost:3005/media/${property.media[0]}`
         : 'https://via.placeholder.com/300x200.png?text=No+Image'; // Gambar placeholder
 
     // Render JSX untuk satu kartu

@@ -7,9 +7,8 @@ import Swal from "sweetalert2";
 import { AuthContext } from "../../context/AuthContext";
 import { useOutletContext } from "react-router-dom";
 
-import { API_URL } from "../../utils/constant";
-
-const API_BASE_URL = API_URL;
+// 💡 TIPS: Pindahkan URL ke satu tempat (misal .env) agar mudah diubah
+const API_BASE_URL = "http://localhost:3004";
 
 export default function PropertiDitolak() {
   const { darkMode } = useOutletContext();

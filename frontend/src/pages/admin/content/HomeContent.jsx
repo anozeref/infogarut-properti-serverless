@@ -6,6 +6,7 @@ import styles from "./HomeContent.module.css";
 import { ThemeContext } from "../DashboardAdmin";
 import { API_URL } from "../../../utils/constant";
 import { smartParseDate, formatDateSeparator } from "../../../utils/dateUtils";
+import { createSocketConnection, setupSocketListeners } from "../../../utils/socketUtils";
 import { LoadingSpinner } from "../../../utils/adminUtils.jsx";
 import StatCard from "./components/components/StatCard";
 
@@ -89,9 +90,20 @@ const HomeContent = () => {
     }
   }, []);
 
-  // Setup data fetching
+  // Setup socket listener
   useEffect(() => {
     fetchData();
+    const socket = createSocketConnection();
+    const cleanup = setupSocketListeners(socket, {
+      userUpdate: fetchData,
+      propertyUpdate: fetchData,
+      update_property: fetchData,
+    });
+
+    return () => {
+      cleanup();
+      socket.disconnect();
+    };
   }, [fetchData]);
 
   // Navigasi berdasarkan tipe notifikasi

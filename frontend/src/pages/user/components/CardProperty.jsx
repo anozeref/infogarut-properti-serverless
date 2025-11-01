@@ -12,7 +12,6 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./CardProperty.module.css";
-import { API_URL } from "../../../utils/constant";
 
 export default function CardProperty({
   id,
@@ -43,13 +42,13 @@ export default function CardProperty({
     ? media.map((m) => {
         if (typeof m === "object" && m.url) {
           return m.url.startsWith("http")
-            ? m
-            : m;
+            ? m.url
+            : `http://localhost:3005/media/${m.url}`;
         }
         if (typeof m === "string") {
           return m.startsWith("http")
             ? m
-            : m;
+            : `http://localhost:3005/media/${m}`;
         }
         return fallbackImage;
       })
@@ -87,8 +86,8 @@ export default function CardProperty({
 
     if (result.isConfirmed) {
       try {
-        // Delete property via serverless API
-        await axios.delete(`${API_URL}properties?id=${id}`);
+        // 🔥 gunakan server.js port 3005 agar hapus + media bisa jalan
+        await axios.delete(`http://localhost:3005/properties/${id}`);
 
         Swal.fire({
           title: "Terhapus!",

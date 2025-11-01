@@ -5,7 +5,6 @@ import styles from "./components/CardProperty.module.css";
 import { AuthContext } from "../../context/AuthContext";
 import Swal from "sweetalert2";
 import { useOutletContext } from "react-router-dom";
-import { API_URL } from "../../utils/constant";
 
 export default function PropertiSaya() {
   const [properties, setProperties] = useState([]);
@@ -29,7 +28,7 @@ export default function PropertiSaya() {
 
     const fetchMyProperties = async () => {
       try {
-        const res = await axios.get(`${API_URL}properties`);
+        const res = await axios.get("http://localhost:3004/properties");
 
         // 🔍 Filter hanya properti milik user login
         const userProperties = res.data

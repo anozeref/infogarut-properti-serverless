@@ -20,6 +20,11 @@ export const handleAdminAction = async (config) => {
     if (result.isConfirmed) {
       await config.action();
 
+      // Emit socket event if provided
+      if (config.emitSocket && config.socket) {
+        config.emitSocket(config.socket, config.socketAction, config.socketData);
+      }
+
       // Refresh data if callback provided
       if (config.onSuccess) config.onSuccess();
 
@@ -45,10 +50,13 @@ export const fetchAdminData = async (endpoint, errorMessage = "Gagal mengambil d
   }
 };
 
-// Update user data
-export const updateUserData = async (id, updatedFields, successMsg) => {
+// Update user data with socket emission
+export const updateUserData = async (id, updatedFields, successMsg, emitSocket, socket) => {
   try {
     const response = await axios.put(`${API_URL}users/${id}`, updatedFields);
+    if (emitSocket && socket) {
+      emitSocket(socket, "userUpdate");
+    }
     showSuccessAlert("Berhasil!", successMsg);
     return response.data;
   } catch (error) {

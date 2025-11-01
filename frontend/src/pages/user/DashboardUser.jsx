@@ -9,6 +9,7 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
+import { io } from "socket.io-client";
 import Swal from "sweetalert2";
 
 // Context
@@ -33,13 +34,17 @@ import TambahPropertiUser from "./TambahPropertiUser";
 // Styles
 import styles from "./DashboardUser.module.css";
 
-import { API_URL } from "../../utils/constant";
-
-const API_BASE_URL = API_URL;
+const API_BASE_URL = "http://localhost:3004";
+const SOCKET_SERVER_URL = "http://localhost:3005";
 
 // ============================================================
-// Socket.IO disabled in serverless architecture
+// BUAT SATU KONEKSI SOCKET DI SINI
 // ============================================================
+const socket = io(SOCKET_SERVER_URL, {
+  transports: ["websocket"],
+  reconnection: true,
+  autoConnect: false, // Akan di-connect manual saat user login
+});
 
 export default function DashboardUser() {
   const { user } = useContext(AuthContext);
@@ -159,7 +164,45 @@ export default function DashboardUser() {
     if (isUserValid) fetchLatestProperties();
   }, [fetchLatestProperties, isUserValid]);
 
-  // === Socket.IO disabled in serverless architecture ===
+  // === Setup Socket.IO ===
+  useEffect(() => {
+    if (!isUserValid) return;
+
+    if (!socket.connected) socket.connect();
+
+    const joinRoom = () => {
+      socket.emit("joinUserRoom", user.id);
+      console.log(`👤 Socket.IO: User ${user.id} bergabung ke ruangan.`);
+    };
+
+    const handleStatusUpdate = (data) => {
+      if (String(data.ownerId) === String(user.id)) {
+        addNotification(data, false);
+        fetchLatestProperties();
+      }
+    };
+
+    const handleUploadNotif = (data) => {
+      if (data.message) addNotification(data, true);
+    };
+
+    socket.on("propertyStatusUpdated", handleStatusUpdate);
+    socket.on("notif_upload", handleUploadNotif);
+    
+    socket.on("connect", joinRoom);
+    socket.on("disconnect", () => {
+      console.log("🔴 Socket disconnected:", socket.id);
+    });
+
+    joinRoom();
+
+    return () => {
+      socket.off("propertyStatusUpdated", handleStatusUpdate);
+      socket.off("notif_upload", handleUploadNotif);
+      socket.off("connect", joinRoom);
+      socket.off("disconnect");
+    };
+  }, [isUserValid, user?.id, addNotification, fetchLatestProperties]);
 
   // === Clear notifikasi ===
   const handleClearNotifications = async () => {
@@ -320,45 +363,45 @@ export default function DashboardUser() {
 
                 <Route
                   path="propertisaya"
-                  element={<Outlet context={{ darkMode }} />}
+                  element={<Outlet context={{ darkMode, socket }} />}
                 >
                   <Route index element={<PropertiSaya />} />
                 </Route>
 
                 <Route
                   path="propertipending"
-                  element={<Outlet context={{ darkMode }} />}
+                  element={<Outlet context={{ darkMode, socket }} />}
                 >
                   <Route index element={<PropertiPending />} />
                 </Route>
 
                 <Route
                   path="propertiaktif"
-                  element={<Outlet context={{ darkMode }} />}
+                  element={<Outlet context={{ darkMode, socket }} />}
                 >
                   <Route index element={<PropertiAktif />} />
                 </Route>
 
                 <Route
                   path="propertiditolak"
-                  element={<Outlet context={{ darkMode }} />}
+                  element={<Outlet context={{ darkMode, socket }} />}
                 >
                   <Route index element={<PropertiDitolak />} />
                 </Route>
 
                 <Route
                   path="edit-property/:id"
-                  element={<EditProperty darkMode={darkMode} />}
+                  element={<EditProperty darkMode={darkMode} socket={socket} />}
                 />
                 <Route
                   path="tambahproperty"
                   element={
-                    <TambahPropertiUser darkMode={darkMode} />
+                    <TambahPropertiUser darkMode={darkMode} socket={socket} />
                   }
                 />
                 <Route
                   path="profileuser"
-                  element={<ProfileUser darkMode={darkMode} />}
+                  element={<ProfileUser darkMode={darkMode} socket={socket} />}
                 />
               </Routes>
             </div>

@@ -7,6 +7,7 @@ import { ThemeContext } from "../DashboardAdmin";
 import styles from "./KelolaUserContent.module.css";
 import { API_URL } from "../../../utils/constant";
 import { formatToCustomTimestamp, parseAndFormatDate, parseDateStringForComparison, parseAndFormatShortDate } from "../../../utils/dateUtils";
+import { createSocketConnection, setupSocketListeners, emitAdminAction } from "../../../utils/socketUtils";
 import { fetchAdminData, LoadingSpinner } from "../../../utils/adminUtils.jsx";
 import TabelUser from "./components/tables/TabelUser";
 import ModalUser from "./ModalUser";
@@ -22,6 +23,8 @@ const KelolaUserContent = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
+  // Initialize socket connection
+  const socket = createSocketConnection();
 
   // Ambil data user dan properti
   const fetchData = useCallback(async () => {
@@ -42,9 +45,15 @@ const KelolaUserContent = () => {
     }
   }, []);
 
-  // Setup data fetching
+  // Setup socket listener
   useEffect(() => {
     fetchData();
+    const cleanup = setupSocketListeners(socket, {
+      userUpdate: fetchData,
+      propertyUpdate: fetchData,
+      update_property: fetchData,
+    });
+    return cleanup;
   }, [fetchData]);
 
   // [REVISED] Update data user: only handles logic (API & socket), returns promise
@@ -55,6 +64,7 @@ const KelolaUserContent = () => {
     }
     try {
       await axios.put(`${API_URL}users/${id}`, { ...target, ...updatedFields });
+      emitAdminAction(socket, "userUpdate");
     } catch (error) {
       console.error("Gagal memperbarui data user:", error);
       throw new Error("Gagal memperbarui data user.");

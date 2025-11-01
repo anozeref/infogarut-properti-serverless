@@ -1,0 +1,528 @@
+{
+  "users": [
+    {
+      "id": "5",
+      "nama": "Admin GarutProperti",
+      "username": "admin_gp",
+      "email": "admin@garutproperti.id",
+      "password": "admin123",
+      "no_hp": "081122334455",
+      "role": "admin",
+      "kecamatan": "Garut Kota",
+      "desa": "Regol",
+      "alamat": "Jl. Patriot No.1, Regol, Garut Kota",
+      "joinedAt": "03/03/2025 08:00:00"
+    },
+    {
+      "id": "9c47",
+      "nama": "Fikry Arief",
+      "username": "anozeref",
+      "email": "kantorposfikry@gmail.com",
+      "password": "testingdb",
+      "no_hp": "082318141476",
+      "kecamatan": "Tarogong Kidul",
+      "desa": "Jayaraga",
+      "alamat": "RT 04 / RW 02",
+      "role": "user",
+      "joinedAt": "14/10/2025 11:21:00",
+      "verified": true,
+      "suspendedUntil": null,
+      "banned": false,
+      "bannedAt": "22/10/2025 12:25:31"
+    },
+    {
+      "id": "45d2",
+      "nama": "Nur Alam",
+      "username": "Alam",
+      "email": "nuralamgarut2311@gmail.com",
+      "password": "nuralam123",
+      "no_hp": "085183231185",
+      "kecamatan": "GARUT KOTA",
+      "desa": "KOTAKULON",
+      "alamat": "RT 05 / RW 03",
+      "role": "user",
+      "joinedAt": "20/10/2025 00:40:28",
+      "verified": true,
+      "suspendedUntil": null,
+      "banned": false,
+      "bannedAt": "23/10/2025 10:28:08"
+    },
+    {
+      "id": "c6e1",
+      "nama": "ajie raka",
+      "username": "ajie123",
+      "email": "adjieraka006@gmail.com",
+      "password": "ajie123",
+      "no_hp": "08175053511",
+      "kecamatan": "Garut Kota",
+      "desa": "Margawat",
+      "alamat": "Buana Resindence No.3",
+      "role": "user",
+      "joinedAt": "25/10/2025 09:59:14"
+    }
+  ],
+  "properties": [
+    {
+      "id": "c5cc",
+      "namaProperti": "Rumah 2 Lantai Bergaya Klasik di Mondstadt, Dekat Katedral Favonius",
+      "jenisProperti": "Jual",
+      "tipeProperti": "Rumah",
+      "lokasi": "Jl. Cathedral Lane No. 12, Blok Barat, Kota Mondstadt",
+      "kecamatan": "Central Mondstadt",
+      "desa": "Windrise Barat",
+      "harga": 979999999,
+      "luasTanah": 150,
+      "luasBangunan": 220,
+      "kamarTidur": 3,
+      "kamarMandi": 2,
+      "periodeAngka": "",
+      "periodeSatuan": "bulan",
+      "deskripsi": "Dijual rumah pribadi 2 lantai di kawasan inti kota Mondstadt, tidak jauh dari Katedral Favonius dan alun-alun utama.\nRumah ini memiliki arsitektur khas Mondstadt dengan dinding batu dan atap biru bergaya Eropa, menghadap langsung ke arah danau.\nSuasananya sangat tenang, sejuk, dan penuh angin segar dari arah Windrise.\n\nRumah terdiri dari ruang tamu luas, dapur bergaya terbuka, serta balkon di lantai atas yang menghadap menara gereja.\nDekat dengan toko-toko lokal, pelabuhan Mondstadt, dan markas Knights of Favonius.\nSangat cocok bagi keluarga kecil, musisi, atau pendatang yang ingin menikmati ketenangan hidup di kota angin.",
+      "media": [
+        "1760890210990-962512817.png",
+        "1760890211064-380850120.png",
+        "1760890211198-793717666.png",
+        "1760890211284-406507583.png"
+      ],
+      "ownerId": "5",
+      "statusPostingan": "approved",
+      "postedAt": "2025-10-19T16:10:11.508Z",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": ""
+    },
+    {
+      "id": "56c7",
+      "namaProperti": "Rumah Bagus",
+      "jenisProperti": "Jual",
+      "tipeProperti": "Rumah",
+      "lokasi": "Palih dinya",
+      "kecamatan": "KERSAMANAH",
+      "desa": "MEKARRAYA",
+      "harga": 12000000,
+      "luasTanah": 100,
+      "luasBangunan": 90,
+      "kamarTidur": 2,
+      "kamarMandi": 1,
+      "periodeAngka": "",
+      "periodeSatuan": "bulan",
+      "deskripsi": "Rumah nyaman ",
+      "media": [
+        "1760899575950-985871423.jpg",
+        "1760899575952-889413226.jpg",
+        "1760899575953-512327863.jpg"
+      ],
+      "ownerId": "45d2",
+      "statusPostingan": "approved",
+      "postedAt": "20/10/2025 01:46:15",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": "/1 bulan",
+      "userId": "3"
+    },
+    {
+      "id": "5058",
+      "namaProperti": "jows house",
+      "jenisProperti": "Jual",
+      "tipeProperti": "Rumah",
+      "lokasi": "ad",
+      "kecamatan": "ss",
+      "desa": "12",
+      "harga": 123,
+      "luasTanah": 22,
+      "luasBangunan": 22,
+      "kamarTidur": 22,
+      "kamarMandi": 22,
+      "periodeAngka": "",
+      "periodeSatuan": "bulan",
+      "deskripsi": "ad",
+      "media": [
+        "1760923038451-509281537.avif",
+        "1760923038451-720054142.avif",
+        "1760923038452-847704159.avif"
+      ],
+      "ownerId": "5",
+      "statusPostingan": "approved",
+      "postedAt": "2025-10-20T01:17:18.457Z",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": ""
+    },
+    {
+      "id": "ca67",
+      "namaProperti": "ff house",
+      "jenisProperti": "Jual",
+      "tipeProperti": "Rumah",
+      "lokasi": "pembangunan",
+      "kecamatan": "GARUT KOTA",
+      "desa": "desi",
+      "harga": 44444,
+      "luasTanah": 4000,
+      "luasBangunan": 3000,
+      "kamarTidur": 6,
+      "kamarMandi": 5,
+      "periodeAngka": "",
+      "periodeSatuan": "bulan",
+      "deskripsi": "bagus",
+      "media": [
+        "1760924254819-682535076.avif",
+        "1760924254820-880987043.avif",
+        "1760924254821-659569968.avif"
+      ],
+      "ownerId": "5",
+      "statusPostingan": "approved",
+      "postedAt": "2025-10-20T01:37:34.829Z",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": ""
+    },
+    {
+      "id": "50b7",
+      "namaProperti": "Rumah Impian 6",
+      "jenisProperti": "Jual",
+      "tipeProperti": "Rumah",
+      "lokasi": "pembangunan",
+      "kecamatan": "BANJARWANGI",
+      "desa": "TANJUNGJAYA",
+      "harga": 25000,
+      "luasTanah": 12,
+      "luasBangunan": 1,
+      "kamarTidur": 1,
+      "kamarMandi": 15,
+      "periodeAngka": "",
+      "periodeSatuan": "bulan",
+      "deskripsi": "Manawi Wegah",
+      "media": [
+        "1760930350028-368311035.avif",
+        "1760930350029-300309706.avif",
+        "1760930350030-976510038.avif"
+      ],
+      "ownerId": "9c47",
+      "statusPostingan": "approved",
+      "postedAt": "20/10/2025 10:19:10",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": "",
+      "userId": "9c47"
+    },
+    {
+      "id": "fe77",
+      "namaProperti": "jows house",
+      "jenisProperti": "Jual",
+      "tipeProperti": "Rumah",
+      "lokasi": "pembangunan",
+      "kecamatan": "BANJARWANGI",
+      "desa": "TANJUNGJAYA",
+      "harga": 12500,
+      "luasTanah": 23,
+      "luasBangunan": 43,
+      "kamarTidur": 67,
+      "kamarMandi": 1,
+      "periodeAngka": "",
+      "periodeSatuan": "bulan",
+      "deskripsi": "Manawi Wegah pecas",
+      "media": [
+        "1760932386519-402305447.avif",
+        "1760932386519-467371497.avif",
+        "1760932386520-68496466.avif"
+      ],
+      "ownerId": "9c47",
+      "statusPostingan": "approved",
+      "postedAt": "20/10/2025 10:53:06",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": "",
+      "userId": "9c47"
+    },
+    {
+      "id": "de7f",
+      "namaProperti": "Villa Rancabango 2 Murah Meriah",
+      "jenisProperti": "Jual",
+      "tipeProperti": "Rumah",
+      "lokasi": "Jl. Ibrahim Adjie No. 960",
+      "kecamatan": "BANYURESMI",
+      "desa": "SUKAMUKTI",
+      "harga": 12863217,
+      "luasTanah": 123,
+      "luasBangunan": 23,
+      "kamarTidur": 51,
+      "kamarMandi": 1,
+      "periodeAngka": "",
+      "periodeSatuan": "bulan",
+      "deskripsi": "Manawi Wegah Pecas",
+      "media": [
+        "1760944407207-406201342.avif",
+        "1760944407208-870527674.avif",
+        "1760944407209-542059803.avif"
+      ],
+      "ownerId": "9c47",
+      "statusPostingan": "approved",
+      "postedAt": "20/10/2025 14:13:27",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": "",
+      "userId": "9c47"
+    },
+    {
+      "id": "1abb",
+      "namaProperti": "Villa Rancabango 2 Murah Mahal",
+      "jenisProperti": "Sewa",
+      "tipeProperti": "Rumah",
+      "lokasi": "Jl. Cimanuk No.45, Tarogong Kidul, Garut",
+      "kecamatan": "",
+      "desa": "",
+      "harga": 500000000,
+      "luasTanah": 240,
+      "luasBangunan": 239,
+      "kamarTidur": 1,
+      "kamarMandi": 21,
+      "periodeAngka": "2",
+      "periodeSatuan": "tahun",
+      "deskripsi": "Coba coba berhadiah",
+      "media": [
+        "1761143261895-445816966.png",
+        "1761143261976-387382894.png",
+        "1761143262001-843402598.png"
+      ],
+      "ownerId": "9c47",
+      "statusPostingan": "pending",
+      "postedAt": "22/10/2025 21:27:42",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": "/2 tahun",
+      "userId": "9c47"
+    },
+    {
+      "id": "9ecc",
+      "namaProperti": "Kost Bagendit Indah",
+      "jenisProperti": "Sewa",
+      "tipeProperti": "Rumah",
+      "lokasi": "Jl. Ibrahim Adjie No. 960",
+      "kecamatan": "GARUT KOTA",
+      "desa": "MARGAWATI",
+      "harga": 10000000,
+      "luasTanah": 100,
+      "luasBangunan": 85,
+      "kamarTidur": 5,
+      "kamarMandi": 2,
+      "periodeAngka": "10",
+      "periodeSatuan": "bulan",
+      "deskripsi": "Kontrakan nyaman",
+      "media": [
+        "1761361239803-49305167.avif",
+        "1761361239803-489819650.avif",
+        "1761361239804-756564103.avif",
+        "1761361239804-642593276.avif"
+      ],
+      "ownerId": "c6e1",
+      "statusPostingan": "approved",
+      "postedAt": "25/10/2025 10:00:39",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": "/10 bulan",
+      "userId": "c6e1"
+    },
+    {
+      "id": "7d91",
+      "namaProperti": "Kost Bagendit Indah",
+      "jenisProperti": "Jual",
+      "tipeProperti": "Rumah",
+      "lokasi": "Jl. Ibrahim Adjie No. 960",
+      "kecamatan": "BANJARWANGI",
+      "desa": "TALAGAJAYA",
+      "harga": 10000000,
+      "luasTanah": 100,
+      "luasBangunan": 85,
+      "kamarTidur": 5,
+      "kamarMandi": 2,
+      "periodeAngka": "",
+      "periodeSatuan": "bulan",
+      "deskripsi": "Rumah bagus",
+      "media": [
+        "1761369024058-219635140.avif",
+        "1761369024060-582783299.avif",
+        "1761369024062-184453429.avif"
+      ],
+      "ownerId": "45d2",
+      "statusPostingan": "approved",
+      "postedAt": "25/10/2025 12:10:24",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": "",
+      "userId": "45d2"
+    },
+    {
+      "id": "0393",
+      "namaProperti": "Rumah Idaman",
+      "jenisProperti": "Jual",
+      "tipeProperti": "Rumah",
+      "lokasi": "Jl. Ibrahim Adjie No. 960",
+      "kecamatan": "",
+      "desa": "",
+      "harga": 10000000,
+      "luasTanah": 100,
+      "luasBangunan": 85,
+      "kamarTidur": 5,
+      "kamarMandi": 2,
+      "periodeAngka": "",
+      "periodeSatuan": "bulan",
+      "deskripsi": "",
+      "media": [
+        "1761369111643-194273179.avif",
+        "1761369111643-72726851.avif",
+        "1761369111644-392254386.avif"
+      ],
+      "ownerId": "45d2",
+      "statusPostingan": "rejected",
+      "postedAt": "25/10/2025 12:11:51",
+      "koordinat": {
+        "lat": 0,
+        "lng": 0
+      },
+      "periodeSewa": "",
+      "userId": "45d2"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "ca18",
+      "userId": "5",
+      "text": "Properti 'jows house' Anda telah disetujui oleh admin.",
+      "isRead": false,
+      "createdAt": "2025-10-22T04:52:33.704Z",
+      "link": "/user/propertiaktif"
+    },
+    {
+      "id": "7c29",
+      "userId": "45d2",
+      "text": "Properti 'Rumah Mewah Di Garut Kota' Anda telah disetujui oleh admin.",
+      "isRead": true,
+      "createdAt": "2025-10-21T15:02:25.174Z",
+      "link": "/user/propertiaktif"
+    },
+    {
+      "id": "6368",
+      "userId": "45d2",
+      "text": "Properti 'Rumah Mewah Di Garut Kotaa123123' Anda telah disetujui oleh admin.",
+      "isRead": true,
+      "createdAt": "2025-10-21T15:33:48.214Z",
+      "link": "/user/propertiaktif"
+    },
+    {
+      "id": "0987",
+      "userId": "45d2",
+      "text": "Properti 'Rumah Asri Sukajayaa' Anda telah ditolak oleh admin.",
+      "isRead": true,
+      "createdAt": "2025-10-21T16:17:58.727Z",
+      "link": "/user/propertiditolak"
+    },
+    {
+      "id": "39b1",
+      "userId": "45d2",
+      "text": "Properti 'Rumah Asri Sukajaya' Anda telah ditolak oleh admin.",
+      "isRead": true,
+      "createdAt": "2025-10-21T16:18:01.717Z",
+      "link": "/user/propertiditolak"
+    },
+    {
+      "id": "7233",
+      "userId": "45d2",
+      "text": "Properti 'Tes' Anda telah disetujui oleh admin.",
+      "isRead": true,
+      "createdAt": "2025-10-21T16:19:11.129Z",
+      "link": "/user/propertiaktif"
+    },
+    {
+      "id": "234e",
+      "userId": "45d2",
+      "text": "Properti 'Rumah Mewah Di Garut Kota' Anda telah disetujui oleh admin.",
+      "isRead": true,
+      "createdAt": "2025-10-22T14:31:32.947Z",
+      "link": "/user/propertiaktif"
+    },
+    {
+      "id": "dcfd",
+      "userId": "45d2",
+      "text": "Properti 'Rumah Mewah Di Garut Kota ' Anda telah ditolak oleh admin.",
+      "isRead": true,
+      "createdAt": "2025-10-22T16:57:35.450Z",
+      "link": "/user/propertiditolak"
+    },
+    {
+      "id": "1a2c",
+      "userId": "45d2",
+      "text": "Properti 'Rumah Mewah Di Garut Kota ' Anda telah ditolak oleh admin.",
+      "isRead": true,
+      "createdAt": "2025-10-22T16:57:38.447Z",
+      "link": "/user/propertiditolak"
+    },
+    {
+      "id": "e737",
+      "userId": "45d2",
+      "text": "Properti 'Rumah Asri Sukajayaq' Anda telah ditolak oleh admin.",
+      "isRead": true,
+      "createdAt": "2025-10-22T17:12:25.988Z",
+      "link": "/user/propertiditolak"
+    },
+    {
+      "id": "9b92",
+      "userId": "45d2",
+      "text": "Properti 'tes123' Anda telah ditolak oleh admin.",
+      "isRead": true,
+      "createdAt": "2025-10-22T17:31:35.788Z",
+      "link": "/user/propertiditolak"
+    },
+    {
+      "id": "fae0",
+      "userId": "5",
+      "text": "Properti 'Villa Rancabango 2 Murah Meriah' Anda telah disetujui oleh admin.",
+      "isRead": false,
+      "createdAt": "2025-10-25T02:56:50.245Z",
+      "link": "/user/propertiaktif"
+    },
+    {
+      "id": "9858",
+      "userId": "c6e1",
+      "text": "Properti 'Kost Bagendit Indah' Anda telah disetujui oleh admin.",
+      "isRead": false,
+      "createdAt": "2025-10-25T03:01:22.726Z",
+      "link": "/user/propertiaktif"
+    },
+    {
+      "id": "0fa0",
+      "userId": "45d2",
+      "text": "Properti 'Kost Bagendit Indah' Anda telah disetujui oleh admin.",
+      "isRead": false,
+      "createdAt": "2025-10-25T05:11:20.049Z",
+      "link": "/user/propertiaktif"
+    },
+    {
+      "id": "b37c",
+      "userId": "45d2",
+      "text": "Properti 'Rumah Idaman' Anda telah ditolak oleh admin.",
+      "isRead": false,
+      "createdAt": "2025-10-25T05:11:58.829Z",
+      "link": "/user/propertiditolak"
+    }
+  ]
+}
