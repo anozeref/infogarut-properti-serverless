@@ -22,10 +22,10 @@ export default async function handler(req, res) {
         }
 
         if (!user || String(user.password) !== String(password)) {
-          return res.status(401).json({ data: null, error: "Invalid credentials" });
+          return res.status(200).json([]);
         }
-
-        return res.status(200).json({ data: user, error: null });
+ 
+        return res.status(200).json([user]);
       }
 
       // Preflight: username only
@@ -37,10 +37,10 @@ export default async function handler(req, res) {
 
         if (error) {
           console.error("Username preflight error");
-          return res.status(400).json({ data: null, error: error.message || "Query error" });
+          return res.status(400).json({ error: error.message || "Query error" });
         }
-
-        return res.status(200).json({ data: rows ?? [], error: null });
+ 
+        return res.status(200).json(rows ?? []);
       }
 
       // Preflight: email only
@@ -52,14 +52,14 @@ export default async function handler(req, res) {
 
         if (error) {
           console.error("Email preflight error");
-          return res.status(400).json({ data: null, error: error.message || "Query error" });
+          return res.status(400).json({ error: error.message || "Query error" });
         }
-
-        return res.status(200).json({ data: rows ?? [], error: null });
+ 
+        return res.status(200).json(rows ?? []);
       }
 
       // No recognized query params
-      return res.status(400).json({ data: null, error: "Missing query params" });
+      return res.status(200).json([]);
     }
 
     if (req.method === "POST") {
@@ -82,13 +82,13 @@ export default async function handler(req, res) {
           // Detect common duplicate conflicts (e.g., unique constraints)
           const isConflict = /duplicate key|already exists|exists|23505/i.test(msg);
           console.error("Insert error");
-          return res.status(isConflict ? 409 : 400).json({ data: null, error: msg });
+          return res.status(isConflict ? 409 : 400).json({ error: msg });
         }
-
-        return res.status(201).json({ data: created, error: null });
+ 
+        return res.status(201).json(created);
       } catch (e) {
         console.error("Insert exception");
-        return res.status(400).json({ data: null, error: "Failed to create user" });
+        return res.status(400).json({ error: "Failed to create user" });
       }
     }
 
