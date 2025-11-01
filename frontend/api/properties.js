@@ -1,5 +1,55 @@
 import supabase from "./_lib/supabase.js";
 
+// Helper: compute base public URL for storage objects
+function __computeMediaBase() {
+  const m = process.env.MEDIA_BASE_URL;
+  if (typeof m === "string" && /^https?:\/\//.test(m)) return m.replace(/\/+$/, "/");
+  const s = process.env.SUPABASE_URL;
+  if (typeof s === "string" && /^https?:\/\//.test(s)) return s.replace(/\/+$/, "") + "/storage/v1/object/public/media/";
+  return null;
+}
+
+// Helper: normalize a single media item (string or object) into absolute URL when possible
+function __transformMediaItem(item, base) {
+  const u = (typeof item === "object" && item)
+    ? (typeof item.url === "string" ? item.url : (typeof item.path === "string" ? item.path : ""))
+    : String(item || "");
+  if (!u) return "";
+  if (/^https?:\/\//.test(u)) return u;
+  return base ? `${base}${u}` : u;
+}
+
+// Helper: normalize row.media into an array of URLs (absolute if base known)
+// - Supports legacy shapes: stringified JSON array, comma-separated string, single object/string
+function __normalizeMediaRow(row, base) {
+  const copy = { ...row };
+  let media = copy.media;
+
+  if (typeof media === "string") {
+    let parsed = null;
+    try {
+      parsed = JSON.parse(media);
+    } catch (_) {
+      parsed = media.split(",").map(s => s.trim()).filter(Boolean);
+    }
+    media = parsed;
+  }
+
+  if (media && !Array.isArray(media)) {
+    media = [media];
+  }
+  if (!Array.isArray(media)) {
+    copy.media = [];
+    return copy;
+  }
+
+  copy.media = media
+    .map(m => __transformMediaItem(m, base))
+    .filter(Boolean);
+
+  return copy;
+}
+
 export default async function handler(req, res) {
   try {
     const { id } = req.query || {};
@@ -18,7 +68,9 @@ export default async function handler(req, res) {
         if (error) {
           return res.status(404).json({ error: "Not Found" });
         }
-        return res.status(200).json(data);
+        const __base = __computeMediaBase();
+        const __row = __normalizeMediaRow(data, __base);
+        return res.status(200).json(__row);
       }
 
       // GET list
@@ -36,7 +88,9 @@ export default async function handler(req, res) {
         console.error("Properties GET error");
         return res.status(400).json({ error: error.message || "Query error" });
       }
-      return res.status(200).json(data || []);
+      const __base = __computeMediaBase();
+      const mapped = (data || []).map((row) => __normalizeMediaRow(row, __base));
+      return res.status(200).json(mapped);
     }
 
     if (req.method === "POST") {

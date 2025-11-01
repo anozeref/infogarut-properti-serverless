@@ -35,9 +35,9 @@ const PropertyCard = ({ property }) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(numericPrice);
   };
   
-  // Helper untuk meresolve URL media (mendukung URL absolut atau path relatif ke Supabase Storage)
+  // Helper untuk meresolve URL media: dukung objek {url} atau string path, serta URL absolut
   const resolveMediaUrl = (item) => {
-    const url = String(item || "");
+    const url = typeof item === 'object' && item?.url ? item.url : String(item || "");
     if (!url) return null;
     if (url.startsWith("http://") || url.startsWith("https://")) return url;
     const base = MEDIA_BASE_URL || "";

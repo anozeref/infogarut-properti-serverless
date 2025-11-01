@@ -45,9 +45,10 @@ const HighlightCard = ({ property }) => {
     // - Jika tidak ada, gunakan URL gambar placeholder.
     const resolveMediaUrl = (val) => {
         if (!val) return null;
-        if (typeof val === 'string' && /^https?:\/\//.test(val)) return val;
-        if (typeof val === 'string' && MEDIA_BASE_URL) return `${MEDIA_BASE_URL}${val}`;
-        return null;
+        const url = (typeof val === 'object' && (val.url || val.path)) ? (val.url || val.path) : String(val || '');
+        if (!url) return null;
+        if (/^https?:\/\//.test(url)) return url;
+        return MEDIA_BASE_URL ? `${MEDIA_BASE_URL}${url}` : null;
     };
     const firstMedia = property.media && property.media.length > 0 ? property.media[0] : null;
     const resolvedImage = resolveMediaUrl(firstMedia);

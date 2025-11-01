@@ -11,6 +11,7 @@ import { IoLocationOutline, IoArrowBack } from "react-icons/io5";
 import { LuBedDouble, LuBath } from "react-icons/lu";
 import { RxRulerSquare } from "react-icons/rx";
 import { FaInstagram } from "react-icons/fa"; // Pastikan ikon Instagram diimpor
+import { MEDIA_BASE_URL } from '../../utils/constant.js';
 
 /**
  * Komponen Halaman `PropertiDetail`:
@@ -33,6 +34,15 @@ const PropertiDetail = () => {
     // State `activeImage`: Menyimpan URL gambar yang sedang ditampilkan sebagai gambar utama di galeri.
     const [activeImage, setActiveImage] = useState('');
 
+    // Helper resolve URL media: dukung objek {url} atau string path, serta URL absolut
+    function resolveMediaUrl(item) {
+        const url = typeof item === 'object' && item?.url ? item.url : String(item || '');
+        if (!url) return null;
+        if (url.startsWith('http://') || url.startsWith('https://')) return url;
+        const base = MEDIA_BASE_URL || '';
+        return base ? `${base}${url}` : null;
+    }
+
     // useEffect Hook untuk mengambil data detail properti saat komponen dimuat atau saat `id` berubah.
     useEffect(() => {
         setLoading(true); // Mulai status loading
@@ -49,8 +59,8 @@ const PropertiDetail = () => {
                 setProperty(data); // Simpan data properti ke state
                 // Set gambar aktif awal: cek jika data ada, punya media, dan media tidak kosong
                 if (data && data.media && data.media.length > 0) {
-                    // Gunakan URL absolut bila tersedia pada field media[0]
-                    setActiveImage(data.media[0]);
+                    const resolved = resolveMediaUrl(data.media[0]);
+                    setActiveImage(resolved || '');
                 } else {
                     setActiveImage('');
                 }
@@ -125,16 +135,19 @@ const PropertiDetail = () => {
                 {/* Daftar Gambar Kecil (Thumbnail) */}
                 <div className={styles.thumbnailImages}>
                     {/* Pastikan `property.media` ada dan merupakan array sebelum mapping */}
-                    {property.media && Array.isArray(property.media) && property.media.map((imgUrl, index) => (
-                        <img
-                            key={index} // Key unik untuk setiap elemen map
-                            src={imgUrl} // Gunakan URL absolut yang tersimpan
-                            alt={`Thumbnail ${index + 1}`} // Teks alternatif
-                            onClick={() => handleThumbnailClick(imgUrl)} // Panggil fungsi saat diklik
-                            // Tambahkan class 'activeThumbnail' jika URL thumbnail = URL gambar aktif
-                            className={activeImage === imgUrl ? styles.activeThumbnail : ''}
-                        />
-                    ))}
+                    {property.media && Array.isArray(property.media) && property.media.map((imgUrl, index) => {
+                        const thumbUrl = resolveMediaUrl(imgUrl) || '';
+                        return (
+                            <img
+                                key={index} // Key unik untuk setiap elemen map
+                                src={thumbUrl}
+                                alt={`Thumbnail ${index + 1}`} // Teks alternatif
+                                onClick={() => handleThumbnailClick(thumbUrl)} // Panggil fungsi saat diklik
+                                // Tambahkan class 'activeThumbnail' jika URL thumbnail = URL gambar aktif
+                                className={activeImage === thumbUrl ? styles.activeThumbnail : ''}
+                            />
+                        );
+                    })}
                 </div>
             </div>
 
