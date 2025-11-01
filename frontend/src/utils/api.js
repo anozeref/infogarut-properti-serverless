@@ -6,7 +6,14 @@ export const loginUser = async (username, password) => {
     if (!res.ok) throw new Error("Gagal menghubungi server");
 
     const data = await res.json();
-    return data.length ? data[0] : null;
+    // Support both object (preferred) and array (legacy) responses
+    if (Array.isArray(data)) {
+      return data.length ? data[0] : null;
+    }
+    if (data && typeof data === "object") {
+      return data;
+    }
+    return null;
   } catch (error) {
     console.error("Login error:", error);
     throw error;

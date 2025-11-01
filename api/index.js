@@ -10,23 +10,23 @@ if (!supabaseUrl || !supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
-  // CORS: wildcard for compatibility; frontend prefers same-origin "/api/"
+  // CORS: wildcard to support previews and any origin.
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
+    // No body for preflight
     return res.status(204).end();
   }
 
   if (req.method === 'GET') {
     try {
-      const { data, error } = await supabase.from('users').select('*').eq('banned', true);
-      if (error) throw error;
-      return res.status(200).json(data);
+      // Redirect root API to properties listing
+      return res.redirect('/api/properties');
     } catch (error) {
-      console.error('Supabase connection or query error in banned-users:', error.message);
-      return res.status(500).json({ error: 'Database connection failed' });
+      console.error('Error redirecting to properties:', error?.message || error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
   }
 
