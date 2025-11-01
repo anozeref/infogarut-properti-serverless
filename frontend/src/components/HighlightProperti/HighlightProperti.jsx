@@ -10,6 +10,7 @@ import styles from './HighlightProperti.module.css';
 import { Link } from 'react-router-dom';
 // Mengimpor ikon lokasi dari react-icons
 import { IoLocationOutline } from "react-icons/io5";
+import { MEDIA_BASE_URL } from '../../utils/constant.js';
 
 // Mengimpor file CSS bawaan dari react-slick (wajib untuk styling dasar slider)
 import "slick-carousel/slick/slick.css";
@@ -38,11 +39,19 @@ const HighlightCard = ({ property }) => {
 
     // Logika menentukan URL gambar:
     // Cek apakah `property.media` ada dan berisi setidaknya satu gambar.
-    // Jika ya, buat URL lengkap ke server backend (`localhost:3005/media/namafile`).
-    // Jika tidak, gunakan URL gambar placeholder.
-    const image = property.media && property.media.length > 0
-        ? `http://localhost:3005/media/${property.media[0]}`
-        : 'https://via.placeholder.com/300x200.png?text=No+Image'; // Gambar placeholder
+    // Resolusi URL:
+    // - Jika nilai media sudah berupa URL absolut (http/https), gunakan langsung.
+    // - Jika berupa path relatif di storage Supabase, gabungkan dengan MEDIA_BASE_URL.
+    // - Jika tidak ada, gunakan URL gambar placeholder.
+    const resolveMediaUrl = (val) => {
+        if (!val) return null;
+        if (typeof val === 'string' && /^https?:\/\//.test(val)) return val;
+        if (typeof val === 'string' && MEDIA_BASE_URL) return `${MEDIA_BASE_URL}${val}`;
+        return null;
+    };
+    const firstMedia = property.media && property.media.length > 0 ? property.media[0] : null;
+    const resolvedImage = resolveMediaUrl(firstMedia);
+    const image = resolvedImage || 'https://via.placeholder.com/300x200.png?text=No+Image'; // Gambar placeholder
 
     // Render JSX untuk satu kartu
     return (

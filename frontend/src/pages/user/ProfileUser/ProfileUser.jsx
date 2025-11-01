@@ -3,6 +3,7 @@ import { FaUserCircle } from "react-icons/fa";
 import styles from "./ProfileUser.module.css";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../context/AuthContext"; // pastikan path-nya sesuai
+import { API_URL } from "../../../utils/constant";
 
 export default function ProfileUser({ darkMode }) {
   const { user } = useContext(AuthContext); // ambil user dari context
@@ -149,15 +150,15 @@ const handleSubmit = async (e) => {
     });
 
     // Ambil dulu data lama user (supaya password-nya tetap sama)
-    const resGet = await fetch(`http://localhost:3004/users/${user.id}`);
+    const resGet = await fetch(`${API_URL}users/${user.id}`);
     const oldData = await resGet.json();
 
     // Gabungkan data lama + update baru (password TIDAK diubah)
     const finalData = { ...oldData, ...updatedProfile, password: oldData.password };
 
     // Simpan hasil akhir
-    const res = await fetch(`http://localhost:3004/users/${user.id}`, {
-      method: "PUT",
+    const res = await fetch(`${API_URL}users/${user.id}`, {
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(finalData),
     });
@@ -212,13 +213,13 @@ const handleSubmit = async (e) => {
         didOpen: () => Swal.showLoading(),
       });
 
-      const resGet = await fetch(`http://localhost:3004/users/${user.id}`);
+      const resGet = await fetch(`${API_URL}users/${user.id}`);
       const userData = await resGet.json();
 
       const updatedUser = { ...userData, password: newPass };
 
-      const res = await fetch(`http://localhost:3004/users/${user.id}`, {
-        method: "PUT",
+      const res = await fetch(`${API_URL}users/${user.id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedUser),
       });

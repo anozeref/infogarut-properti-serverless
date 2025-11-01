@@ -2,8 +2,26 @@ import supabase from "./_lib/supabase.js";
 
 export default async function handler(req, res) {
   try {
+    const { id } = req.query || {};
+
     if (req.method === "GET") {
       const { userId, _sort, _order } = req.query || {};
+
+      // GET satu notifikasi berdasarkan id (untuk rewrite: /api/notifications/:id -> /api/notifications?id=:id)
+      if (id) {
+        const { data, error } = await supabase
+          .from("notifications")
+          .select("*")
+          .eq("id", String(id))
+          .single();
+
+        if (error || !data) {
+          return res.status(404).json({ error: "Not Found" });
+        }
+        return res.status(200).json(data);
+      }
+
+      // GET list
       let query = supabase.from("notifications").select("*");
       if (userId) query = query.eq("userId", String(userId));
       if (_sort) {
@@ -42,7 +60,23 @@ export default async function handler(req, res) {
       return res.status(201).json(created);
     }
 
-    res.setHeader("Allow", ["GET", "POST"]);
+    if (req.method === "DELETE") {
+      if (!id) {
+        return res.status(400).json({ error: "Missing id" });
+      }
+      const { error } = await supabase
+        .from("notifications")
+        .delete()
+        .eq("id", String(id));
+
+      if (error) {
+        console.error("Notifications DELETE error");
+        return res.status(400).json({ error: error.message || "Delete error" });
+      }
+      return res.status(200).json({});
+    }
+
+    res.setHeader("Allow", ["GET", "POST", "DELETE"]);
     return res.status(405).json({ error: "Method Not Allowed" });
   } catch (e) {
     console.error("Notifications route exception");

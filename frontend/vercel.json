@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/api/properties/:id", "destination": "/api/properties?id=:id" },
+    { "source": "/api/notifications/:id", "destination": "/api/notifications?id=:id" },
+    { "source": "/api/users/:id/unban", "destination": "/api/users?id=:id&unban=1" },
+    { "source": "/api/users/:id", "destination": "/api/users?id=:id" }
+  ]
+}

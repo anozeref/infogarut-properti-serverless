@@ -1,18 +1,19 @@
 // frontend/src/pages/user/TambahPropertiUser.jsx
 import React, { useState, useContext, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { io } from "socket.io-client";
+import { createSocketConnection } from "../../utils/socketUtils.js";
 import Swal from "sweetalert2";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../../utils/constant.js";
 
 export default function TambahPropertiUser({ darkMode, socket: externalSocket }) {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
-  const socket = io("http://localhost:3005");
+  const socket = createSocketConnection();
   
 
   // ===================== STATE =====================
@@ -179,13 +180,34 @@ export default function TambahPropertiUser({ darkMode, socket: externalSocket })
     }
 
     try {
-      // Upload media ke server.js
-      const formDataUpload = new FormData();
-      mediaFiles.forEach((f) => formDataUpload.append("media", f));
-      const uploadRes = await axios.post("http://localhost:3005/upload", formDataUpload, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      const mediaNames = uploadRes.data.files;
+      // Upload media ke Supabase Storage via serverless API
+      const toBase64NoHeader = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = String(reader.result || "");
+            const base64 = result.includes(",") ? result.split(",")[1] : result;
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+      const uploadOne = async (file) => {
+        const fileBase64 = await toBase64NoHeader(file);
+        const resp = await axios.post(`${API_URL}media/upload`, {
+          fileBase64,
+          fileName: file.name,
+          pathPrefix: `properties/${user?.id || "anon"}`
+        });
+        return resp.data?.url || null;
+      };
+
+      const mediaUrls = [];
+      for (const f of mediaFiles) {
+        const url = await uploadOne(f);
+        if (url) mediaUrls.push(url);
+      }
 
       // Simpan properti ke db.json
       const propertyData = {
@@ -199,11 +221,11 @@ export default function TambahPropertiUser({ darkMode, socket: externalSocket })
         ownerId: user.id,
         userId: user.id,
         postedAt: getTimestamp(),
-        media: mediaNames,
+        media: mediaUrls,
         statusPostingan: "pending",
       };
 
-            await axios.post("http://localhost:3004/properties", propertyData);
+            await axios.post(`${API_URL}properties`, propertyData);
 
       // 🔔 Emit notifikasi realtime ke admin
       if (socket && socket.connected) {

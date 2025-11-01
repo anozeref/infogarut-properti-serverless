@@ -103,7 +103,7 @@ const Properti = () => {
     useEffect(() => {
         setLoading(true); // Mulai status loading
         // Mengambil data dari endpoint `/properties` di json-server
-        fetch('http://localhost:3004/properties')
+        fetch('/api/properties')
             .then(res => res.json()) // Mengubah response menjadi format JSON
             .then(data => {
                 // Setelah data diterima, urutkan berdasarkan tanggal posting

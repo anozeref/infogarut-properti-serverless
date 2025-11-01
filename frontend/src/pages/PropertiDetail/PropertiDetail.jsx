@@ -36,8 +36,8 @@ const PropertiDetail = () => {
     // useEffect Hook untuk mengambil data detail properti saat komponen dimuat atau saat `id` berubah.
     useEffect(() => {
         setLoading(true); // Mulai status loading
-        // Mengambil data dari json-server (port 3004) untuk properti dengan ID spesifik
-        fetch(`http://localhost:3004/properties/${id}`)
+        // Mengambil data dari API serverless untuk properti dengan ID spesifik
+        fetch(`/api/properties/${id}`)
             .then(res => {
                 // Jika response tidak OK (misal: 404 Not Found), lempar error
                 if (!res.ok) {
@@ -49,11 +49,10 @@ const PropertiDetail = () => {
                 setProperty(data); // Simpan data properti ke state
                 // Set gambar aktif awal: cek jika data ada, punya media, dan media tidak kosong
                 if (data && data.media && data.media.length > 0) {
-                    // Buat URL lengkap ke server backend (port 3005) yang menyajikan gambar
-                    setActiveImage(`http://localhost:3005/media/${data.media[0]}`);
+                    // Gunakan URL absolut bila tersedia pada field media[0]
+                    setActiveImage(data.media[0]);
                 } else {
-                    // Jika tidak ada gambar, set ke string kosong atau URL placeholder
-                    setActiveImage(''); // Atau gambar placeholder: 'https://via.placeholder.com/800x600.png?text=No+Image'
+                    setActiveImage('');
                 }
             })
             .catch(error => {
@@ -67,9 +66,8 @@ const PropertiDetail = () => {
      * Fungsi `handleThumbnailClick`: Mengubah gambar utama (`activeImage`) saat thumbnail diklik.
      * @param {string} imageName - Nama file gambar yang diklik.
      */
-    const handleThumbnailClick = (imageName) => {
-        // Buat URL lengkap ke server backend (port 3005) untuk gambar yang diklik
-        setActiveImage(`http://localhost:3005/media/${imageName}`);
+    const handleThumbnailClick = (imageUrl) => {
+        setActiveImage(imageUrl);
     };
 
     /**
@@ -127,14 +125,14 @@ const PropertiDetail = () => {
                 {/* Daftar Gambar Kecil (Thumbnail) */}
                 <div className={styles.thumbnailImages}>
                     {/* Pastikan `property.media` ada dan merupakan array sebelum mapping */}
-                    {property.media && Array.isArray(property.media) && property.media.map((imgName, index) => (
+                    {property.media && Array.isArray(property.media) && property.media.map((imgUrl, index) => (
                         <img
                             key={index} // Key unik untuk setiap elemen map
-                            src={`http://localhost:3005/media/${imgName}`} // URL lengkap ke gambar thumbnail
+                            src={imgUrl} // Gunakan URL absolut yang tersimpan
                             alt={`Thumbnail ${index + 1}`} // Teks alternatif
-                            onClick={() => handleThumbnailClick(imgName)} // Panggil fungsi saat diklik
+                            onClick={() => handleThumbnailClick(imgUrl)} // Panggil fungsi saat diklik
                             // Tambahkan class 'activeThumbnail' jika URL thumbnail = URL gambar aktif
-                            className={activeImage === `http://localhost:3005/media/${imgName}` ? styles.activeThumbnail : ''}
+                            className={activeImage === imgUrl ? styles.activeThumbnail : ''}
                         />
                     ))}
                 </div>

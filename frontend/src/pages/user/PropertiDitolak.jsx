@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { useOutletContext } from "react-router-dom";
 
 // 💡 TIPS: Pindahkan URL ke satu tempat (misal .env) agar mudah diubah
-const API_BASE_URL = "http://localhost:3004";
+import { API_URL } from "../../utils/constant";
 
 export default function PropertiDitolak() {
   const { darkMode } = useOutletContext();
@@ -32,7 +32,7 @@ export default function PropertiDitolak() {
       // Ini jauh lebih cepat dan hemat data.
 
       // Untuk saat ini, kita tetap pakai filter di frontend:
-      const res = await axios.get(`${API_BASE_URL}/properties`);
+      const res = await axios.get(`${API_URL}properties`);
 
       // 🔍 Filter: hanya milik user & status rejected
       const filtered = res.data
@@ -110,7 +110,7 @@ export default function PropertiDitolak() {
     if (!confirm.isConfirmed) return;
 
     try {
-      await axios.delete(`${API_BASE_URL}/properties/${id}`);
+      await axios.delete(`${API_URL}properties/${id}`);
       // Logic ini sudah SANGAT BAGUS. UI update tanpa refresh.
       setProperties((prev) => prev.filter((p) => p.id !== id));
 

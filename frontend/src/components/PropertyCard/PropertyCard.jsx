@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { IoLocationOutline } from "react-icons/io5";
 import { LuBedDouble, LuBath } from "react-icons/lu";
 import { RxRulerSquare } from "react-icons/rx";
+import { MEDIA_BASE_URL } from '../../utils/constant.js';
 
 /**
  * Komponen `PropertyCard`:
@@ -33,14 +34,23 @@ const PropertyCard = ({ property }) => {
     // Menggunakan Intl.NumberFormat untuk format mata uang IDR
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(numericPrice);
   };
-
+  
+  // Helper untuk meresolve URL media (mendukung URL absolut atau path relatif ke Supabase Storage)
+  const resolveMediaUrl = (item) => {
+    const url = String(item || "");
+    if (!url) return null;
+    if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    const base = MEDIA_BASE_URL || "";
+    return base ? `${base}${url}` : null;
+  };
+  
   // Logika menentukan URL gambar utama untuk kartu:
   // Cek apakah `property.media` (array nama file gambar) ada dan tidak kosong.
   // Jika ya, gunakan nama file pertama (`property.media[0]`) dan buat URL lengkap
   // ke server backend (port 3005) yang menyajikan gambar dari folder /media.
   // Jika tidak ada gambar, gunakan URL gambar placeholder.
   const mainImage = property.media && property.media.length > 0
-    ? `http://localhost:3005/media/${property.media[0]}`
+    ? resolveMediaUrl(property.media[0]) || 'https://via.placeholder.com/400x300.png?text=No+Image'
     : 'https://via.placeholder.com/400x300.png?text=No+Image';
 
   // Render JSX untuk komponen PropertyCard

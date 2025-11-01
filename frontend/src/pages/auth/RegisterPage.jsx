@@ -5,9 +5,9 @@ import { registerUser } from "../../utils/api";
 import { AuthContext } from "../../context/AuthContext";
 import styles from "./LoginPage.module.css";
 import { motion } from "framer-motion";
-import { io } from "socket.io-client";
+import { createSocketConnection } from "../../utils/socketUtils";
 
-const socket = io("http://localhost:3005");
+const socket = createSocketConnection();
 
 const RegisterPage = () => {
   const navigate = useNavigate();

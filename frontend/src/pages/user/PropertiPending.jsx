@@ -1,6 +1,7 @@
 // === PropertiPending.jsx ===
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import { API_URL } from "../../utils/constant.js";
 import CardProperty from "./components/CardProperty";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../context/AuthContext";
@@ -27,7 +28,7 @@ export default function PropertiPending() {
 
     const fetchPendingProperties = async () => {
       try {
-        const res = await axios.get("http://localhost:3004/properties");
+        const res = await axios.get(`${API_URL}properties`);
 
         // 🔍 Filter: hanya properti user ini yg masih pending
         const filtered = res.data
@@ -71,22 +72,22 @@ export default function PropertiPending() {
   }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        const res = await axios.delete(`http://localhost:3004/properties/${id}`);
+        const res = await axios.delete(`${API_URL}properties/${id}`);
 
         // json-server kadang return 200 atau 204 → dua-duanya dianggap sukses
         if (res.status === 200 || res.status === 204) {
           Swal.fire("Terhapus!", "Properti berhasil dihapus.", "success");
           // langsung refresh data tanpa reload halaman
-          fetchProperties();
+          fetchPendingProperties();
         } else {
           Swal.fire("Hmm?", "Respons tidak dikenali, tapi mungkin berhasil.", "info");
-          fetchProperties();
+          fetchPendingProperties();
         }
       } catch (error) {
         // cek apakah properti sudah tidak ada tapi axios error
         if (error.response && error.response.status === 404) {
           Swal.fire("Selesai!", "Properti sudah tidak ada, halaman akan diperbarui.", "success");
-          fetchProperties();
+          fetchPendingProperties();
         } else {
           console.error("Gagal menghapus properti:", error);
           Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus properti.", "error");

@@ -76,8 +76,8 @@ const HomePage = () => {
     // Berjalan hanya *satu kali* setelah komponen pertama kali di-render (`[]`).
     useEffect(() => {
         setLoading(true); // Set status loading menjadi true
-        // Mengambil *semua* data properti dari json-server
-        fetch('http://localhost:3004/properties')
+        // Mengambil semua data properti dari API serverless
+        fetch('/api/properties')
             .then((res) => res.json()) // Mengubah response menjadi JSON
             .then((data) => {
                 // 1. Filter: Ambil hanya properti yang statusPostingannya 'approved' (case-insensitive)

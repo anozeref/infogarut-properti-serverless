@@ -2,8 +2,26 @@ import supabase from "./_lib/supabase.js";
 
 export default async function handler(req, res) {
   try {
+    const { id } = req.query || {};
+
     if (req.method === "GET") {
       const { ownerId, statusPostingan, _sort, _order } = req.query || {};
+
+      // GET single by id (for rewrites: /api/properties/:id -> /api/properties?id=:id)
+      if (id) {
+        const { data, error } = await supabase
+          .from("properties")
+          .select("*")
+          .eq("id", String(id))
+          .single();
+
+        if (error) {
+          return res.status(404).json({ error: "Not Found" });
+        }
+        return res.status(200).json(data);
+      }
+
+      // GET list
       let query = supabase.from("properties").select("*");
 
       if (ownerId) query = query.eq("ownerId", String(ownerId));
@@ -43,7 +61,46 @@ export default async function handler(req, res) {
       return res.status(201).json(created);
     }
 
-    res.setHeader("Allow", ["GET", "POST"]);
+    if (req.method === "PATCH") {
+      if (!id) {
+        return res.status(400).json({ error: "Missing id" });
+      }
+      const updated = req.body || {};
+      if (Object.prototype.hasOwnProperty.call(updated, "id")) {
+        delete updated.id;
+      }
+
+      const { data, error } = await supabase
+        .from("properties")
+        .update(updated)
+        .eq("id", String(id))
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Properties PATCH error");
+        return res.status(400).json({ error: error.message || "Update error" });
+      }
+      return res.status(200).json(data);
+    }
+
+    if (req.method === "DELETE") {
+      if (!id) {
+        return res.status(400).json({ error: "Missing id" });
+      }
+      const { error } = await supabase
+        .from("properties")
+        .delete()
+        .eq("id", String(id));
+
+      if (error) {
+        console.error("Properties DELETE error");
+        return res.status(400).json({ error: error.message || "Delete error" });
+      }
+      return res.status(200).json({});
+    }
+
+    res.setHeader("Allow", ["GET", "POST", "PATCH", "DELETE"]);
     return res.status(405).json({ error: "Method Not Allowed" });
   } catch (e) {
     console.error("Properties route exception");

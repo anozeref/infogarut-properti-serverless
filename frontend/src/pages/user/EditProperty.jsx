@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaArrowLeft, FaTimes } from "react-icons/fa"; // Pastikan FaTimes diimpor
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { API_URL, MEDIA_BASE_URL } from "../../utils/constant.js";
 import Swal from "sweetalert2";
 import styles from "./EditProperty.module.css";
 
@@ -33,7 +34,7 @@ export default function EditProperty({ darkMode }) {
   // 🔹 Ambil data properti dari backend
   useEffect(() => {
     axios
-      .get(`http://localhost:3004/properties/${id}`)
+      .get(`${API_URL}properties/${id}`)
       .then((res) => {
         setFormData({
           ...res.data,
@@ -106,7 +107,7 @@ export default function EditProperty({ darkMode }) {
     fileInputRef.current.click();
   };
 
-  // 🔹 Submit (PUT ke db.json)
+  // 🔹 Submit (PUT ke API serverless + upload media ke Supabase)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -115,8 +116,74 @@ export default function EditProperty({ darkMode }) {
       return;
     }
 
+    const toBase64NoHeaderFromFile = (file) =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = String(reader.result || "");
+          const base64 = result.includes(",") ? result.split(",")[1] : result;
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+    const toBase64NoHeaderFromBlobUrl = async (blobUrl) => {
+      const resp = await fetch(blobUrl);
+      const blob = await resp.blob();
+      return await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = String(reader.result || "");
+          const base64 = result.includes(",") ? result.split(",")[1] : result;
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    };
+
+    const uploadBase64 = async (fileBase64, fileName) => {
+      const resp = await axios.post(`${API_URL}media/upload`, {
+        fileBase64,
+        fileName,
+        pathPrefix: `properties/${id}`,
+      });
+      return resp.data?.url || null;
+    };
+
     try {
-      await axios.put(`http://localhost:3004/properties/${id}`, formData);
+      const finalMedia = [];
+      for (const item of formData.media || []) {
+        if (typeof item === "string") {
+          if (item.startsWith("http://") || item.startsWith("https://")) {
+            finalMedia.push(item);
+          } else {
+            const base = MEDIA_BASE_URL || "";
+            if (base) finalMedia.push(`${base}${item}`);
+          }
+        } else if (item && typeof item === "object") {
+          const itemUrl = item.url || "";
+          if (itemUrl.startsWith("http://") || itemUrl.startsWith("https://")) {
+            finalMedia.push(itemUrl);
+          } else if (itemUrl.startsWith("blob:")) {
+            const base64 = await toBase64NoHeaderFromBlobUrl(itemUrl);
+            const uploaded = await uploadBase64(base64, item.name || `media-${Date.now()}`);
+            if (uploaded) finalMedia.push(uploaded);
+          } else if (item.file instanceof File) {
+            const base64 = await toBase64NoHeaderFromFile(item.file);
+            const uploaded = await uploadBase64(base64, item.file.name);
+            if (uploaded) finalMedia.push(uploaded);
+          } else {
+            const base = MEDIA_BASE_URL || "";
+            if (base && itemUrl) finalMedia.push(`${base}${itemUrl}`);
+          }
+        }
+      }
+
+      const payload = { ...formData, media: finalMedia };
+
+      await axios.put(`${API_URL}properties/${id}`, payload);
       Swal.fire({
         title: "Berhasil!",
         text: "Properti berhasil diperbarui.",
@@ -333,7 +400,10 @@ export default function EditProperty({ darkMode }) {
                     !fileUrl.startsWith("http") &&
                     !fileUrl.startsWith("blob")
                   ) {
-                    fileUrl = `http://localhost:3005/media/${fileUrl}`;
+                    const base = MEDIA_BASE_URL || "";
+                    if (base) {
+                      fileUrl = `${base}${fileUrl}`;
+                    }
                   }
 
                   const fileType =

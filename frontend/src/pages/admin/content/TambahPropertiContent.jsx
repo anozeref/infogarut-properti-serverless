@@ -6,9 +6,10 @@ import { ThemeContext } from "../DashboardAdmin";
 import styles from "./TambahPropertiContent.module.css";
 import axios from "axios";
 import { createSocketConnection, emitAdminAction } from "../../../utils/socketUtils";
+import { API_URL } from "../../../utils/constant";
 
 // Socket untuk real-time updates
-const socket = createSocketConnection("http://localhost:3005");
+const socket = createSocketConnection();
 
 // Halaman Tambah Properti Admin
 const TambahPropertiContent = () => {
@@ -93,12 +94,31 @@ const TambahPropertiContent = () => {
     }
     setIsSubmitting(true);
     try {
-      const formDataUpload = new FormData();
-      mediaFiles.forEach(f => formDataUpload.append("media", f));
-      console.log("TambahPropertiContent: Uploading media to localhost:3005/upload");
-      // Upload ke server 3005
-      const uploadRes = await axios.post("http://localhost:3005/upload", formDataUpload);
-      console.log("TambahPropertiContent: Upload response:", uploadRes.data);
+      // Upload setiap file ke serverless endpoint Supabase Storage (/api/media/upload)
+      const fileToBase64 = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const result = reader.result;
+            const base64 = typeof result === "string" ? result.split(",")[1] : "";
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+      const uploadedUrls = [];
+      for (const f of mediaFiles) {
+        const fileBase64 = await fileToBase64(f);
+        const resp = await axios.post(`${API_URL}media/upload`, {
+          fileBase64,
+          fileName: f.name,
+          pathPrefix: "admin"
+        });
+        const url = resp.data?.url || (resp.data?.path ? `${resp.data.path}` : "");
+        if (url) uploadedUrls.push(url);
+      }
+      console.log("TambahPropertiContent: Uploaded media URLs:", uploadedUrls);
 
       const propertiData = {
         ...form,
@@ -108,11 +128,11 @@ const TambahPropertiContent = () => {
         kamarTidur: Number(form.kamarTidur),
         kamarMandi: Number(form.kamarMandi),
         postedAt: getTimestamp(),
-        media: uploadRes.data.files,
+        media: uploadedUrls,
         periodeSewa: form.jenisProperti === "Sewa" ? `/${form.periodeAngka} ${form.periodeSatuan}` : ""
       };
-      console.log("TambahPropertiContent: Posting property data to localhost:3004/properties");
-      await axios.post("http://localhost:3004/properties", propertiData);
+      console.log(`TambahPropertiContent: Posting property data to ${API_URL}properties`);
+      await axios.post(`${API_URL}properties`, propertiData);
       emitAdminAction(socket, "propertyUpdate");
       Swal.fire("Properti Berhasil Ditambahkan!", `Properti "${form.namaProperti}" telah berhasil ditambahkan ke sistem dan akan muncul di halaman publik setelah disetujui.`, "success");
 
