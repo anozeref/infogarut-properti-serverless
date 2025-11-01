@@ -4,16 +4,15 @@ import { motion } from 'framer-motion';
 import { FiKey, FiTrash2, FiUsers } from 'react-icons/fi';
 import styles from './PengaturanContent.module.css';
 import axios from 'axios';
-import { createSocketConnection, emitAdminAction } from '../../../utils/socketUtils';
+import { API_URL } from '../../../utils/constant.js';
 
 // Axios instance ke backend
 const api = axios.create({
-  baseURL: 'http://localhost:3005',
+  baseURL: API_URL,
   headers: { 'X-Admin-Request': 'true' }
 });
 
-// Socket instance untuk real-time updates
-const socket = createSocketConnection("http://localhost:3005");
+// Real-time updates disabled; migrating to Supabase Realtime
 
 // Animasi card variants
 const cardVariants = {
@@ -29,10 +28,10 @@ export default function PengaturanContent() {
   // Ambil data banned users
   useEffect(() => {
     const fetchBannedUsers = async () => {
-      console.log("PengaturanContent: Fetching banned users from localhost:3005/api/banned-users");
+      console.log("PengaturanContent: Fetching banned users from API /api/banned-users");
       setIsLoadingBanned(true);
       try {
-        const res = await api.get('/api/banned-users');
+        const res = await api.get('banned-users');
         console.log("PengaturanContent: Fetched banned users count:", res.data.length);
         setBannedUsers(res.data);
       } catch (err) {
@@ -65,7 +64,7 @@ export default function PengaturanContent() {
           didOpen: () => Swal.showLoading()
         });
         try {
-          const res = await api.post('/api/media/cleanup');
+          const res = await api.post('media/cleanup');
           Swal.fire('Pembersihan Selesai!', `Media yang tidak terpakai telah berhasil dihapus. ${res.data.message}`, 'success');
         } catch (err) {
           const message = err.response?.data?.error || 'Terjadi kesalahan saat pembersihan media.';
@@ -90,13 +89,13 @@ export default function PengaturanContent() {
       if (result.isConfirmed) {
         try {
           // Panggil endpoint unban
-          await api.patch(`/api/users/${userId}/unban`);
+          await api.patch(`users/${userId}/unban`);
           
           // Update state lokal
           setBannedUsers(current => current.filter(u => u.id !== userId));
           
           // Kirim sinyal socket update
-          emitAdminAction(socket, 'userUpdate');
+          // TODO: Supabase Realtime subscription will refresh banned users list
           
           Swal.fire('User Berhasil Di-Unban!', `Pengguna ${username} telah berhasil di-unban dan dapat mengakses sistem kembali.`, 'success');
         } catch (err) {
@@ -186,7 +185,7 @@ export default function PengaturanContent() {
 
             try {
               // ID admin selalu 5
-              const res = await axios.get("http://localhost:3004/users/5"); 
+              const res = await api.get('users/5');
               const adminData = res.data;
 
               if (adminData.password !== passwordLama) {
@@ -194,7 +193,7 @@ export default function PengaturanContent() {
               }
 
               // Update password
-              await axios.patch("http://localhost:3004/users/5", { password: passwordBaru });
+              await api.patch('users/5', { password: passwordBaru });
               Swal.fire("Password Berhasil Diubah!", "Password admin telah berhasil diperbarui. Silakan login ulang untuk mengonfirmasi.", "success");
               e.target.reset();
             } catch (err) {

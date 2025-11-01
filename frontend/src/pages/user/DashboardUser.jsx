@@ -9,7 +9,7 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
-import { io } from "socket.io-client";
+import { createSocketConnection } from "../../utils/socketUtils";
 import Swal from "sweetalert2";
 
 // Context
@@ -33,18 +33,12 @@ import TambahPropertiUser from "./TambahPropertiUser";
 
 // Styles
 import styles from "./DashboardUser.module.css";
-
-const API_BASE_URL = "http://localhost:3004";
-const SOCKET_SERVER_URL = "http://localhost:3005";
+import { API_URL } from "../../utils/constant";
 
 // ============================================================
 // BUAT SATU KONEKSI SOCKET DI SINI
 // ============================================================
-const socket = io(SOCKET_SERVER_URL, {
-  transports: ["websocket"],
-  reconnection: true,
-  autoConnect: false, // Akan di-connect manual saat user login
-});
+const socket = createSocketConnection();
 
 export default function DashboardUser() {
   const { user } = useContext(AuthContext);
@@ -66,7 +60,7 @@ export default function DashboardUser() {
     if (!isUserValid) return;
     try {
       const res = await axios.get(
-        `${API_BASE_URL}/notifications?userId=${user.id}&_sort=createdAt&_order=desc`
+        `${API_URL}notifications?userId=${user.id}&_sort=createdAt&_order=desc`
       );
       const formattedNotifs = res.data.map((n) => ({
         id: n.id,
@@ -133,7 +127,7 @@ export default function DashboardUser() {
   const fetchLatestProperties = useCallback(() => {
     if (!isUserValid) return;
     axios
-      .get(`${API_BASE_URL}/properties`)
+      .get(`${API_URL}properties`)
       .then((res) => {
         const activeProps = res.data
           .filter(
@@ -210,7 +204,7 @@ export default function DashboardUser() {
 
   try {
     // Ambil semua notifikasi milik user
-    const res = await axios.get(`${API_BASE_URL}/notifications?userId=${user.id}`);
+    const res = await axios.get(`${API_URL}notifications?userId=${user.id}`);
     const userNotifs = res.data;
 
     if (userNotifs.length === 0) return;
@@ -218,7 +212,7 @@ export default function DashboardUser() {
     // Hapus satu per satu (karena JSON Server belum dukung bulk delete)
     await Promise.all(
       userNotifs.map((notif) =>
-        axios.delete(`${API_BASE_URL}/notifications/${notif.id}`)
+        axios.delete(`${API_URL}notifications/${notif.id}`)
       )
     );
 

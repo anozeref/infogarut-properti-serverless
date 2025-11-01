@@ -1,14 +1,27 @@
-// Utility functions for socket management across admin components
-
+// Socket utilities with graceful degradation when SOCKET_SERVER_URL is empty
 import { io } from "socket.io-client";
+import { SOCKET_SERVER_URL } from "./constant";
 
-// Create and manage socket connections
-export const createSocketConnection = (url = "http://localhost:3005") => {
-  return io(url);
+// Create and manage socket connections (returns a mock when disabled)
+export const createSocketConnection = (url = SOCKET_SERVER_URL) => {
+  const target = String(url || "").trim();
+  if (!target) {
+    return {
+      on() {},
+      off() {},
+      emit() {},
+      connect() {},
+      disconnect() {},
+      connected: false,
+      id: null,
+    };
+  }
+  return io(target);
 };
 
 // Socket event handlers for common admin operations
 export const setupSocketListeners = (socket, handlers) => {
+  if (!socket) return () => {};
   if (handlers.userUpdate) socket.on("userUpdate", handlers.userUpdate);
   if (handlers.propertyUpdate) socket.on("propertyUpdate", handlers.propertyUpdate);
   if (handlers.update_property) socket.on("update_property", handlers.update_property);
@@ -22,6 +35,7 @@ export const setupSocketListeners = (socket, handlers) => {
 
 // Emit socket events for admin actions
 export const emitAdminAction = (socket, action, data) => {
+  if (!socket) return;
   switch (action) {
     case "userUpdate":
       socket.emit("userUpdate");
