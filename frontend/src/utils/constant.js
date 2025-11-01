@@ -1,4 +1,7 @@
-// src/constant.js
-export const API_URL = "http://localhost:3004/";
-export const SOCKET_URL = "http://localhost:3005";
-export const MEDIA_URL = "http://localhost:3005/media/";
+export const API_URL = "/api/";
+export const SOCKET_SERVER_URL = import.meta.env.VITE_SOCKET_SERVER_URL || "";
+export const MEDIA_BASE_URL = import.meta.env.VITE_MEDIA_BASE_URL || "";
+
+// Backward compatibility to avoid breaking existing imports
+export const SOCKET_URL = SOCKET_SERVER_URL;
+export const MEDIA_URL = MEDIA_BASE_URL;

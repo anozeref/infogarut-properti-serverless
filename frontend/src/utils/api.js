@@ -1,4 +1,4 @@
-import { API_URL } from "./constant";
+import { API_URL } from "./constant.js";
 
 export const loginUser = async (username, password) => {
   try {
