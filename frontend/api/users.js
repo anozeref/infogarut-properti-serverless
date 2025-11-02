@@ -99,34 +99,21 @@ export default async function handler(req, res) {
         return res.status(422).json({ error: "Missing required fields: username, email, password" });
       }
 
-      // Allowed columns and timestamp normalization
-      const ALLOWED_COLUMNS = ["username", "email", "password", "role", "created_at", "joinedAt"];
-      const parseDDMMYYYYHHMMSS = (value) => {
-        const m = /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})$/.exec(String(value || ""));
-        if (!m) return null;
-        const [_, d, mo, y, h, mi, s] = m;
-        const dt = new Date(Date.UTC(+y, +mo - 1, +d, +h, +mi, +s));
-        return isNaN(dt.getTime()) ? null : dt.toISOString();
-      };
-
-      const nowIso = new Date().toISOString();
-      const joinedAtIso = body.joinedAt ? (parseDDMMYYYYHHMMSS(body.joinedAt) || nowIso) : nowIso;
+      // Allowed columns: restrict to minimal required fields to avoid schema mismatch
+      const ALLOWED_COLUMNS = ["username", "email", "password"];
 
       // Shape payload strictly to allowed columns, ignoring any extra client-sent fields
       const payload = {
         username: String(username).trim(),
         email: String(email).trim(),
         password: String(password),
-        role: isNonEmptyString(body.role) ? body.role : "user",
-        created_at: nowIso, // server authoritative
-        joinedAt: joinedAtIso, // normalized ISO
       };
 
       // Defensive filtering to ensure only whitelisted keys are inserted
       const shaped = Object.fromEntries(Object.entries(payload).filter(([k]) => ALLOWED_COLUMNS.includes(k)));
 
       try {
-        const { data: created, error } = await supabase
+        const { data: row, error } = await supabase
           .from("users")
           .insert([shaped])
           .select()
@@ -151,7 +138,7 @@ export default async function handler(req, res) {
           return res.status(500).json({ error: "Failed to create user", details: error.message });
         }
 
-        return res.status(201).json({ data: created });
+        return res.status(201).json({ data: row });
       } catch (e) {
         try { console.error("Insert exception"); } catch (_) {}
         return res.status(500).json({ error: "Failed to create user" });
