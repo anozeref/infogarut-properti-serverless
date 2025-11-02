@@ -86,37 +86,75 @@ export default async function handler(req, res) {
     // POST: create user
     if (req.method === "POST") {
       const body = req.body ?? {};
+
+      // Minimal non-sensitive logging: only keys (never log password values)
+      try {
+        console.info("users.create keys", Array.isArray(body) ? [] : Object.keys(body || {}));
+      } catch (_) {}
+
+      // Validation: enforce required string fields
+      const isNonEmptyString = (v) => typeof v === "string" && v.trim().length > 0;
       const { username, email, password } = body;
-      if (!username || !email || !password) {
-        return res.status(400).json({ error: "Missing required fields: username, email, password" });
+      if (!isNonEmptyString(username) || !isNonEmptyString(email) || !isNonEmptyString(password)) {
+        return res.status(422).json({ error: "Missing required fields: username, email, password" });
       }
 
-      // Accept extended profile fields from client; set defaults
-      const payload = {
-        ...body,
-        created_at: new Date().toISOString(),
-        joinedAt: body.joinedAt || body.created_at || new Date().toISOString(),
-        role: body.role || "user",
+      // Allowed columns and timestamp normalization
+      const ALLOWED_COLUMNS = ["username", "email", "password", "role", "created_at", "joinedAt"];
+      const parseDDMMYYYYHHMMSS = (value) => {
+        const m = /^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2}):(\d{2})$/.exec(String(value || ""));
+        if (!m) return null;
+        const [_, d, mo, y, h, mi, s] = m;
+        const dt = new Date(Date.UTC(+y, +mo - 1, +d, +h, +mi, +s));
+        return isNaN(dt.getTime()) ? null : dt.toISOString();
       };
+
+      const nowIso = new Date().toISOString();
+      const joinedAtIso = body.joinedAt ? (parseDDMMYYYYHHMMSS(body.joinedAt) || nowIso) : nowIso;
+
+      // Shape payload strictly to allowed columns, ignoring any extra client-sent fields
+      const payload = {
+        username: String(username).trim(),
+        email: String(email).trim(),
+        password: String(password),
+        role: isNonEmptyString(body.role) ? body.role : "user",
+        created_at: nowIso, // server authoritative
+        joinedAt: joinedAtIso, // normalized ISO
+      };
+
+      // Defensive filtering to ensure only whitelisted keys are inserted
+      const shaped = Object.fromEntries(Object.entries(payload).filter(([k]) => ALLOWED_COLUMNS.includes(k)));
 
       try {
         const { data: created, error } = await supabase
           .from("users")
-          .insert([payload])
+          .insert([shaped])
           .select()
           .single();
 
         if (error) {
-          const msg = error.message || "Failed to create user";
-          const isConflict = /duplicate key|already exists|exists|23505/i.test(msg);
-          console.error("Insert error");
-          return res.status(isConflict ? 409 : 400).json({ error: msg });
+          const msg = String(error.message || "");
+          const code = String(error.code || "");
+          const isDuplicate = /duplicate key value violates unique constraint|already exists|exists|23505/i.test(msg) || code === "23505";
+          const isRls = /row-level security policy|permission denied/i.test(msg) || code === "42501";
+
+          // Non-sensitive error mapping
+          const status = isDuplicate ? 409 : isRls ? 403 : 500;
+          try { console.info("users.create status", status); } catch (_) {}
+
+          if (isDuplicate) {
+            return res.status(409).json({ error: "User already exists" });
+          }
+          if (isRls) {
+            return res.status(403).json({ error: "Insufficient permissions" });
+          }
+          return res.status(500).json({ error: "Failed to create user", details: error.message });
         }
 
-        return res.status(201).json(created);
+        return res.status(201).json({ data: created });
       } catch (e) {
-        console.error("Insert exception");
-        return res.status(400).json({ error: "Failed to create user" });
+        try { console.error("Insert exception"); } catch (_) {}
+        return res.status(500).json({ error: "Failed to create user" });
       }
     }
 
