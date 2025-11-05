@@ -99,49 +99,47 @@ export default async function handler(req, res) {
         return res.status(422).json({ error: "Missing required fields: username, email, password" });
       }
 
-      // Allowed columns: restrict to minimal required fields to avoid schema mismatch
-      const ALLOWED_COLUMNS = ["username", "email", "password"];
-
-      // Shape payload strictly to allowed columns, ignoring any extra client-sent fields
-      const payload = {
-        username: String(username).trim(),
-        email: String(email).trim(),
-        password: String(password),
+      // Allowed columns expanded to include profile fields
+      const ALLOWED_COLUMNS = ["username","email","password","nama","no_hp","kecamatan","desa","alamat","role","joinedAt","created_at"];
+      
+      // Shape payload with defaults and safe coercion
+      const nowIso = new Date().toISOString();
+      const shaped = {
+        username: String(body.username || "").trim(),
+        email: String(body.email || "").trim(),
+        password: body.password,
+        role: body.role || "user",
+        joinedAt: body.joinedAt || nowIso,
+        nama: body.nama ?? null,
+        no_hp: body.no_hp ?? null,
+        kecamatan: body.kecamatan ?? null,
+        desa: body.desa ?? null,
+        alamat: body.alamat ?? null,
+        created_at: body.created_at || nowIso,
       };
-
+      
       // Defensive filtering to ensure only whitelisted keys are inserted
-      const shaped = Object.fromEntries(Object.entries(payload).filter(([k]) => ALLOWED_COLUMNS.includes(k)));
+      const filtered = Object.fromEntries(Object.entries(shaped).filter(([k]) => ALLOWED_COLUMNS.includes(k)));
 
       try {
         const { data: row, error } = await supabase
           .from("users")
-          .insert([shaped])
+          .insert([filtered])
           .select()
           .single();
-
+      
         if (error) {
-          const msg = String(error.message || "");
-          const code = String(error.code || "");
-          const isDuplicate = /duplicate key value violates unique constraint|already exists|exists|23505/i.test(msg) || code === "23505";
-          const isRls = /row-level security policy|permission denied/i.test(msg) || code === "42501";
-
-          // Non-sensitive error mapping
-          const status = isDuplicate ? 409 : isRls ? 403 : 500;
-          try { console.info("users.create status", status); } catch (_) {}
-
-          if (isDuplicate) {
-            return res.status(409).json({ error: "User already exists" });
-          }
-          if (isRls) {
-            return res.status(403).json({ error: "Insufficient permissions" });
-          }
-          return res.status(500).json({ error: "Failed to create user", details: error.message });
+          const code = error?.code;
+          const status = code === "23505" ? 409 : code === "42501" ? 403 : 400;
+          try { console.error("users.create error", { path: "/api/users:POST", code, message: error?.message }); } catch (_) {}
+          return res.status(status).json({ error: error?.message || "Insert failed", code });
         }
-
-        return res.status(201).json({ data: row });
+      
+        return res.status(201).json(row);
       } catch (e) {
-        try { console.error("Insert exception"); } catch (_) {}
-        return res.status(500).json({ error: "Failed to create user" });
+        const code = e?.code || e?.error;
+        try { console.error("users.create exception", { path: "/api/users:POST", code, message: e?.message }); } catch (_) {}
+        return res.status(400).json({ error: e?.message || "Insert failed", code });
       }
     }
 

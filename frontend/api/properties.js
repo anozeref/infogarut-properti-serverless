@@ -95,6 +95,13 @@ export default async function handler(req, res) {
 
     if (req.method === "POST") {
       const body = req.body || {};
+      
+      // Minimal validation for required fields
+      const { namaProperti, ownerId, harga } = body;
+      if (!namaProperti || !ownerId || typeof harga !== "number") {
+        return res.status(400).json({ error: "Missing required fields", code: "validation_error" });
+      }
+      
       const now = new Date();
       const ddmmyyyy = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMonth() + 1).padStart(2, "0")}/${now.getFullYear()}`;
       const payload = {
@@ -109,8 +116,10 @@ export default async function handler(req, res) {
         .single();
 
       if (error) {
-        console.error("Properties POST insert error");
-        return res.status(400).json({ error: error.message || "Insert error" });
+        const code = error?.code;
+        const status = code === "23505" ? 409 : code === "42501" ? 403 : 400;
+        try { console.error("properties.create error", { path: "/api/properties:POST", code, message: error?.message }); } catch (_) {}
+        return res.status(status).json({ error: error?.message || "Operation failed", code });
       }
       return res.status(201).json(created);
     }
@@ -132,8 +141,10 @@ export default async function handler(req, res) {
         .single();
 
       if (error) {
-        console.error("Properties PATCH error");
-        return res.status(400).json({ error: error.message || "Update error" });
+        const code = error?.code;
+        const status = code === "23505" ? 409 : code === "42501" ? 403 : 400;
+        try { console.error("properties.update error", { path: "/api/properties:PATCH", code, message: error?.message }); } catch (_) {}
+        return res.status(status).json({ error: error?.message || "Operation failed", code });
       }
       return res.status(200).json(data);
     }

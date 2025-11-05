@@ -54,11 +54,16 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: "Method Not Allowed" });
     }
 
+    // Early guard: require service-role for bucket management/uploads
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return res.status(500).json({ error: "Server misconfiguration: SUPABASE_SERVICE_ROLE_KEY missing", code: "config_missing" });
+    }
+    
     const { fileBase64, fileName, pathPrefix } = req.body || {};
     if (!fileBase64 || !fileName) {
       return res
         .status(400)
-        .json({ error: "Missing required fields: fileBase64, fileName" });
+        .json({ error: "Missing required fields: fileBase64, fileName", code: "validation_error" });
     }
 
     const bucket = "media";
@@ -72,8 +77,9 @@ export default async function handler(req, res) {
           public: true,
         });
         if (bucketErr) {
-          console.error("Failed to create Supabase bucket 'media':", bucketErr);
-          return res.status(400).json({ error: bucketErr.message || "Bucket creation failed" });
+          const code = bucketErr?.code || bucketErr?.error;
+          try { console.error("media.bucket.create error", { path: "/api/media/upload:POST", code, message: bucketErr?.message }); } catch (_) {}
+          return res.status(400).json({ error: bucketErr?.message || "Upload failed", code });
         }
       }
     } catch (e) {
@@ -108,10 +114,9 @@ export default async function handler(req, res) {
       });
 
     if (error) {
-      console.error("Supabase storage upload error");
-      return res
-        .status(400)
-        .json({ error: error.message || "Upload failed" });
+      const code = error?.code || error?.error;
+      try { console.error("media.upload error", { path: "/api/media/upload:POST", code, message: error?.message }); } catch (_) {}
+      return res.status(400).json({ error: error?.message || "Upload failed", code });
     }
 
     // Get public URL
@@ -126,7 +131,8 @@ export default async function handler(req, res) {
       path: objectPath,
     });
   } catch (e) {
-    console.error("Media upload route exception");
-    return res.status(400).json({ error: "Bad Request" });
+    const code = e?.code || e?.error;
+    try { console.error("media.route exception", { path: "/api/media/upload:POST", code, message: e?.message }); } catch (_) {}
+    return res.status(400).json({ error: e?.message || "Upload failed", code });
   }
 }
