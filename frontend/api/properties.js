@@ -91,6 +91,26 @@ function __buildValidationDetails(body) {
   return details;
 }
 
+/** ID generation helpers to satisfy NOT NULL "id" constraint */
+function __uuidv4() {
+  try {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+      return crypto.randomUUID();
+    }
+  } catch (_) {}
+  // Fallback UUID v4 generator
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+function __normalizeId(incoming) {
+  const v = typeof incoming === "string" ? incoming.trim() : incoming;
+  if (v && String(v).length) return String(v);
+  return __uuidv4();
+}
+
 export default async function handler(req, res) {
   let __corrId = null;
   try {
@@ -163,9 +183,20 @@ export default async function handler(req, res) {
 
       const now = new Date();
       const ddmmyyyy = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMonth() + 1).padStart(2, "0")}/${now.getFullYear()}`;
+
+      // Ensure non-null id to satisfy DB NOT NULL constraint (uuid/text)
+      const safeId = __normalizeId(body.id);
+
+      // Do not allow client payload to override generated id
+      const cleanBody = { ...body };
+      if (Object.prototype.hasOwnProperty.call(cleanBody, "id")) {
+        delete cleanBody.id;
+      }
+
       const payload = {
+        id: safeId,
         postedAt: body.postedAt || ddmmyyyy,
-        ...body,
+        ...cleanBody,
       };
 
       const { data: created, error } = await supabase
