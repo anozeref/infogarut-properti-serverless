@@ -118,21 +118,48 @@ const TambahPropertiContent = () => {
         const url = resp.data?.url || (resp.data?.path ? `${resp.data.path}` : "");
         if (url) uploadedUrls.push(url);
       }
-      console.log("TambahPropertiContent: Uploaded media URLs:", uploadedUrls);
+      console.info("TambahPropertiContent: Uploaded media count:", uploadedUrls.length);
+
+      const hargaNum = Number(form.harga);
+      if (!Number.isFinite(hargaNum)) {
+        Swal.fire("Error", "Harga tidak valid. Masukkan angka yang benar.", "error");
+        setIsSubmitting(false);
+        return;
+      }
+      const ownerIdNorm = Number.isFinite(Number(form.ownerId)) ? Number(form.ownerId) : String(form.ownerId).trim();
 
       const propertiData = {
-        ...form,
-        harga: Number(form.harga),
-        luasTanah: Number(form.luasTanah),
-        luasBangunan: Number(form.luasBangunan),
-        kamarTidur: Number(form.kamarTidur),
-        kamarMandi: Number(form.kamarMandi),
-        postedAt: getTimestamp(),
-        media: uploadedUrls,
-        periodeSewa: form.jenisProperti === "Sewa" ? `/${form.periodeAngka} ${form.periodeSatuan}` : ""
+        namaProperti: String(form.namaProperti).trim(),
+        ownerId: ownerIdNorm,
+        harga: hargaNum,
+        statusPostingan: "approved",
+        media: uploadedUrls
       };
+
+      // Optional string fields
+      const optionalStrings = ["jenisProperti","tipeProperti","lokasi","kecamatan","desa","deskripsi"];
+      optionalStrings.forEach((k) => {
+        const v = String(form[k] ?? "").trim();
+        if (v) propertiData[k] = v;
+      });
+
+      // Optional numeric fields: include only if finite
+      [["luasTanah", form.luasTanah], ["luasBangunan", form.luasBangunan], ["kamarTidur", form.kamarTidur], ["kamarMandi", form.kamarMandi]].forEach(([k,v]) => {
+        const n = Number(v);
+        if (Number.isFinite(n)) propertiData[k] = n;
+      });
+
+      // Periode sewa (only for "Sewa" and without leading slash)
+      if (form.jenisProperti === "Sewa") {
+        const periodeSewa = `${form.periodeAngka} ${form.periodeSatuan}`.trim();
+        if (periodeSewa) propertiData.periodeSewa = periodeSewa;
+      }
+
+      console.info("TambahPropertiContent: Prepared payload keys", { keys: Object.keys(propertiData), mediaCount: Array.isArray(propertiData.media) ? propertiData.media.length : 0 });
+
+      const reqId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
       console.log(`TambahPropertiContent: Posting property data to ${API_URL}properties`);
-      await axios.post(`${API_URL}properties`, propertiData);
+      await axios.post(`${API_URL}properties`, propertiData, { headers: { "x-request-id": reqId } });
       emitAdminAction(socket, "propertyUpdate");
       Swal.fire("Properti Berhasil Ditambahkan!", `Properti "${form.namaProperti}" telah berhasil ditambahkan ke sistem dan akan muncul di halaman publik setelah disetujui.`, "success");
 
@@ -142,8 +169,23 @@ const TambahPropertiContent = () => {
       setMediaPreview([]);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err) {
-      console.error(err);
-      Swal.fire("Gagal Menambahkan Properti!", "Terjadi kesalahan saat menambahkan properti. Periksa kembali data Anda dan coba lagi.", "error");
+      console.error("TambahPropertiContent: Submit error", { status: err?.response?.status });
+      const payload = err?.response?.data;
+      const parts = [];
+      if (payload?.error) parts.push(String(payload.error));
+      if (payload?.code) parts.push(`Code: ${payload.code}`);
+      if (payload?.correlationId) parts.push(`ID: ${payload.correlationId}`);
+      if (payload?.code === "validation_error" && Array.isArray(payload?.details)) {
+        parts.push("Detail Validasi:");
+        payload.details.forEach(d => parts.push(`- ${d.field}: ${d.issue}`));
+      }
+      if (payload?.code === "db_insert_error" && payload?.db) {
+        parts.push(`DB: ${payload.db.message || "Insert error"}`);
+        if (payload.db.hint) parts.push(`Hint: ${payload.db.hint}`);
+        if (payload.db.details) parts.push(`Details: ${payload.db.details}`);
+      }
+      const text = parts.length ? parts.join("\n") : "Terjadi kesalahan saat menambahkan properti.";
+      Swal.fire("Gagal Menambahkan Properti!", text, "error");
     } finally {
       setIsSubmitting(false);
     }

@@ -176,7 +176,7 @@ export default function TambahPropertiUser({ darkMode, socket: externalSocket })
         Swal.fire("Error", "Isi periode sewa!", "error");
         return;
       }
-      periodeSewa = `/${form.periodeAngka} ${form.periodeSatuan}`;
+      periodeSewa = `${form.periodeAngka} ${form.periodeSatuan}`;
     }
 
     try {
@@ -210,22 +210,43 @@ export default function TambahPropertiUser({ darkMode, socket: externalSocket })
       }
 
       // Simpan properti ke db.json
+      const hargaNum = Number(form.harga);
+      if (!Number.isFinite(hargaNum)) {
+        Swal.fire("Error", "Harga tidak valid. Masukkan angka yang benar.", "error");
+        return;
+      }
+      const ownerIdNorm = Number.isFinite(Number(user?.id)) ? Number(user.id) : String(user?.id ?? "").trim();
+
       const propertyData = {
-        ...form,
-        harga: Number(form.harga),
-        luasTanah: Number(form.luasTanah),
-        luasBangunan: Number(form.luasBangunan),
-        kamarTidur: Number(form.kamarTidur),
-        kamarMandi: Number(form.kamarMandi),
-        periodeSewa,
-        ownerId: user.id,
-        userId: user.id,
-        postedAt: getTimestamp(),
-        media: mediaUrls,
+        namaProperti: String(form.namaProperti).trim(),
+        ownerId: ownerIdNorm,
+        harga: hargaNum,
         statusPostingan: "pending",
+        media: mediaUrls
       };
 
-            await axios.post(`${API_URL}properties`, propertyData);
+      // Optional string fields (only include if non-empty)
+      ["jenisProperti","tipeProperti","lokasi","kecamatan","desa","deskripsi"].forEach((k) => {
+        const v = String(form[k] ?? "").trim();
+        if (v) propertyData[k] = v;
+      });
+
+      // Optional numeric fields (include only if finite)
+      [["luasTanah", form.luasTanah], ["luasBangunan", form.luasBangunan], ["kamarTidur", form.kamarTidur], ["kamarMandi", form.kamarMandi]].forEach(([k,v]) => {
+        const n = Number(v);
+        if (Number.isFinite(n)) propertyData[k] = n;
+      });
+
+      // Periode sewa (only for "Sewa", without leading slash)
+      if (form.jenisProperti === "Sewa") {
+        const ps = `${form.periodeAngka} ${form.periodeSatuan}`.trim();
+        if (ps) propertyData.periodeSewa = ps;
+      }
+
+      console.info("TambahPropertiUser: Prepared payload keys", { keys: Object.keys(propertyData), mediaCount: Array.isArray(propertyData.media) ? propertyData.media.length : 0 });
+
+      const reqId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
+      await axios.post(`${API_URL}properties`, propertyData, { headers: { "x-request-id": reqId } });
 
       // 🔔 Emit notifikasi realtime ke admin
       if (socket && socket.connected) {
@@ -237,8 +258,23 @@ export default function TambahPropertiUser({ darkMode, socket: externalSocket })
 
 
     } catch (err) {
-      console.error("Gagal menambahkan properti:", err);
-      Swal.fire("Error", "Gagal menambahkan properti!", "error");
+      console.error("TambahPropertiUser: Submit error", { status: err?.response?.status });
+      const payload = err?.response?.data;
+      const parts = [];
+      if (payload?.error) parts.push(String(payload.error));
+      if (payload?.code) parts.push(`Code: ${payload.code}`);
+      if (payload?.correlationId) parts.push(`ID: ${payload.correlationId}`);
+      if (payload?.code === "validation_error" && Array.isArray(payload?.details)) {
+        parts.push("Detail Validasi:");
+        payload.details.forEach((d) => parts.push(`- ${d.field}: ${d.issue}`));
+      }
+      if (payload?.code === "db_insert_error" && payload?.db) {
+        parts.push(`DB: ${payload.db.message || "Insert error"}`);
+        if (payload.db.hint) parts.push(`Hint: ${payload.db.hint}`);
+        if (payload.db.details) parts.push(`Details: ${payload.db.details}`);
+      }
+      const text = parts.length ? parts.join("\n") : "Gagal menambahkan properti!";
+      Swal.fire("Error", text, "error");
     }
   };
 

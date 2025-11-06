@@ -50,8 +50,51 @@ function __normalizeMediaRow(row, base) {
   return copy;
 }
 
-export default async function handler(req, res) {
+/**
+ * Helper: generate or extract a correlation ID
+ * - Prefer x-request-id header if provided
+ * - Otherwise generate timestamp+random
+ */
+function __getCorrelationId(req) {
   try {
+    const h =
+      (req && req.headers && (req.headers["x-request-id"] || req.headers["X-Request-Id"] || req.headers["x-requestid"])) ||
+      null;
+    if (typeof h === "string" && h.trim()) return h.trim();
+  } catch (_) {}
+  const ts = Date.now().toString(36);
+  const rnd = Math.random().toString(36).slice(2, 10);
+  return `${ts}-${rnd}`;
+}
+
+/**
+ * Helper: build validation details for POST /api/properties
+ * Only checks existing required fields enforced by the route:
+ * - namaProperti missing/empty
+ * - ownerId missing/empty
+ * - harga must be a finite number
+ */
+function __buildValidationDetails(body) {
+  const details = [];
+  const { namaProperti, ownerId, harga } = body || {};
+
+  if (!namaProperti || (typeof namaProperti === "string" && !namaProperti.trim())) {
+    details.push({ field: "namaProperti", issue: "missing or empty" });
+  }
+  if (!ownerId || (typeof ownerId === "string" && !String(ownerId).trim())) {
+    details.push({ field: "ownerId", issue: "missing or empty" });
+  }
+  if (!(typeof harga === "number" && Number.isFinite(harga))) {
+    details.push({ field: "harga", issue: "must be a finite number" });
+  }
+
+  return details;
+}
+
+export default async function handler(req, res) {
+  let __corrId = null;
+  try {
+    __corrId = __getCorrelationId(req);
     const { id } = req.query || {};
 
     if (req.method === "GET") {
@@ -94,14 +137,30 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "POST") {
+      const correlationId = __corrId;
       const body = req.body || {};
-      
-      // Minimal validation for required fields
-      const { namaProperti, ownerId, harga } = body;
-      if (!namaProperti || !ownerId || typeof harga !== "number") {
-        return res.status(400).json({ error: "Missing required fields", code: "validation_error" });
+
+      // Request logging (minimal payload summary; no secrets)
+      try {
+        console.info("[properties][POST]", {
+          correlationId,
+          keys: Object.keys(body || {}),
+          mediaCount: Array.isArray(body?.media) ? body.media.length : 0,
+        });
+      } catch (_) {}
+
+      // Enhanced validation with standardized error shape
+      const details = __buildValidationDetails(body);
+      if (details.length) {
+        try { console.warn("[properties][POST][validation]", { correlationId, details }); } catch (_) {}
+        return res.status(400).json({
+          error: "Validation failed",
+          code: "validation_error",
+          details,
+          correlationId,
+        });
       }
-      
+
       const now = new Date();
       const ddmmyyyy = `${String(now.getDate()).padStart(2, "0")}/${String(now.getMonth() + 1).padStart(2, "0")}/${now.getFullYear()}`;
       const payload = {
@@ -118,8 +177,20 @@ export default async function handler(req, res) {
       if (error) {
         const code = error?.code;
         const status = code === "23505" ? 409 : code === "42501" ? 403 : 400;
-        try { console.error("properties.create error", { path: "/api/properties:POST", code, message: error?.message }); } catch (_) {}
-        return res.status(status).json({ error: error?.message || "Operation failed", code });
+        const dbErr = {
+          message: error?.message,
+          hint: error?.hint || null,
+          details: error?.details || null,
+          code: error?.code || null,
+          constraint: error?.constraint || null,
+        };
+        try { console.error("[properties][POST][db_error]", { correlationId, db: dbErr }); } catch (_) {}
+        return res.status(status).json({
+          error: "Database insert failed",
+          code: "db_insert_error",
+          db: dbErr,
+          correlationId,
+        });
       }
       return res.status(201).json(created);
     }
@@ -168,7 +239,13 @@ export default async function handler(req, res) {
     res.setHeader("Allow", ["GET", "POST", "PATCH", "DELETE"]);
     return res.status(405).json({ error: "Method Not Allowed" });
   } catch (e) {
-    console.error("Properties route exception");
-    return res.status(400).json({ error: "Bad Request" });
+    const correlationId = __corrId || __getCorrelationId(req);
+    try {
+      console.error("[properties][unhandled_exception]", {
+        correlationId,
+        stack: (e && e.stack) || (e && e.message) || String(e),
+      });
+    } catch (_) {}
+    return res.status(400).json({ error: "Bad Request", code: "unhandled_exception", correlationId });
   }
 }
